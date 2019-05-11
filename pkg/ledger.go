@@ -40,6 +40,22 @@ func AddDebitTransaction(book LogBook, wallet string, debit int, aggregate strin
 	return &DebitTransactionAdded{wallet, debit, aggregate}
 }
 
+// AddCashInTransaction adds a new cash in type transaction in the given LogBook
+// returns an event representing the newly added transaction called CashInTransactionAdded
+func AddCashInTransaction(book LogBook, wallet string, credit int, aggregate string) *CashInTransactionAdded {
+	book.addTransaction(transactionCashIn, wallet, credit, aggregate)
+
+	return &CashInTransactionAdded{wallet, credit, aggregate}
+}
+
+// AddCashOutTransaction adds a new cash out type transaction in the given LogBook
+// returns an event representing the newly added transaction called CashOutTransactionAdded
+func AddCashOutTransaction(book LogBook, wallet string, debit int, aggregate string) *CashOutTransactionAdded {
+	book.addTransaction(transactionCashOut, wallet, debit, aggregate)
+
+	return &CashOutTransactionAdded{wallet, debit, aggregate}
+}
+
 // WalletBalance returns the current balance of a wallet based on its transactions
 // returns an error if wallet has no transactions
 func WalletBalance(book LogBook, wallet string) (int, error) {

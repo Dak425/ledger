@@ -44,6 +44,52 @@ func TestAddDebitTransaction(t *testing.T) {
 	}
 }
 
+func TestAddCashInTransaction(t *testing.T) {
+	t.Run("should return a valid CashInTransactionAdded event", func(t *testing.T) {
+		book := setupMockLogBook()
+		wallet := "1"
+		aggregate := "3333"
+		credit := 1000
+
+		event := AddCashInTransaction(book, wallet, credit, aggregate)
+
+		if event.Wallet != wallet {
+			t.Error("DebitTransactionAdded event has incorrect wallet ID")
+		}
+
+		if event.Credit != credit {
+			t.Error("DebitTransactionAdded event has incorrect debit amount")
+		}
+
+		if event.Aggregate != aggregate {
+			t.Error("DebitTransactionAdded event has incorrect aggregate ID")
+		}
+	})
+}
+
+func TestAddCashOutTransaction(t *testing.T) {
+	t.Run("should return a valid CashOutTransactionAdded event", func(t *testing.T) {
+		book := setupMockLogBook()
+		wallet := "1"
+		aggregate := "3333"
+		debit := 1000
+
+		event := AddCashOutTransaction(book, wallet, debit, aggregate)
+
+		if event.Wallet != wallet {
+			t.Error("DebitTransactionAdded event has incorrect wallet ID")
+		}
+
+		if event.Debit != debit {
+			t.Error("DebitTransactionAdded event has incorrect debit amount")
+		}
+
+		if event.Aggregate != aggregate {
+			t.Error("DebitTransactionAdded event has incorrect aggregate ID")
+		}
+	})
+}
+
 func TestWalletBalance(t *testing.T) {
 	t.Run("should return the balance for a given wallet ID", func(t *testing.T) {
 		book := setupMockLogBook()

@@ -11,3 +11,15 @@ type DebitTransactionAdded struct {
 	Debit     int    `json:"debit"`
 	Aggregate string `json:"aggregate"`
 }
+
+type CashInTransactionAdded struct {
+	Wallet    string `json:"wallet"`
+	Credit    int    `json:"credit"`
+	Aggregate string `json:"aggregate"`
+}
+
+type CashOutTransactionAdded struct {
+	Wallet    string `json:"wallet"`
+	Debit     int    `json:"debit"`
+	Aggregate string `json:"aggregate"`
+}
