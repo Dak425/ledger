@@ -267,7 +267,7 @@ func TestLogBook_AggregateTransactions(t *testing.T) {
 	})
 }
 
-func setupMockLogBook() LogBook {
+func setupMockLogBook() *LogBook {
 	t1 := Transaction{transactionCashIn, "1", 100000, "1111"}
 	t2 := Transaction{transactionCashIn, "1", 10000, "1112"}
 	t3 := Transaction{transactionDebit, "1", 10000, "1112"}
@@ -283,7 +283,7 @@ func setupMockLogBook() LogBook {
 
 	transactions := []Transaction{t1, t2, t3, t4, t5, t6, t7, t8, t9, t10, t11, t12}
 
-	l := LogBook{transactions, make(map[string][]*Transaction), make(map[string][]*Transaction)}
+	l := &LogBook{transactions, make(map[string][]*Transaction), make(map[string][]*Transaction)}
 
 	for _, t := range l.transactions {
 		l.addWalletMapEntry(t)

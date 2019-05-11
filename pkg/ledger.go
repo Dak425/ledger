@@ -17,6 +17,12 @@ type Transaction struct {
 	Aggregate string `json:"aggregate"` // the ID used to identify a group of transactions
 }
 
+type ILogBook interface {
+	addTransaction(transactionType string, wallet string, amount int, aggregate string)
+	walletTransactions(wallet string) ([]*Transaction, error)
+	aggregateTransactions(aggregate string) ([]*Transaction, error)
+}
+
 // LogBook represents a collection of transactions showing credit/debit actions against a given wallet
 type LogBook struct {
 	transactions []Transaction             // the collection of transactions in the book
@@ -24,33 +30,33 @@ type LogBook struct {
 	aggregateMap map[string][]*Transaction // bookmarks for each aggregate pointing to all transactions for that aggregate
 }
 
-// AddCreditTransaction adds a new credit transaction in the given LogBook
+// AddCreditTransaction adds a new credit transaction in the given ILogBook
 // returns a event representing the newly added transaction called CreditTransactionAdded
-func AddCreditTransaction(book LogBook, wallet string, credit int, aggregate string) *CreditTransactionAdded {
+func AddCreditTransaction(book ILogBook, wallet string, credit int, aggregate string) *CreditTransactionAdded {
 	book.addTransaction(transactionCredit, wallet, credit, aggregate)
 
 	return &CreditTransactionAdded{wallet, credit, aggregate}
 }
 
-// AddDebitTransaction adds a new debit type transaction in the given LogBook
+// AddDebitTransaction adds a new debit type transaction in the given ILogBook
 // returns an event representing the newly added transaction called DebitTransactionAdded
-func AddDebitTransaction(book LogBook, wallet string, debit int, aggregate string) *DebitTransactionAdded {
+func AddDebitTransaction(book ILogBook, wallet string, debit int, aggregate string) *DebitTransactionAdded {
 	book.addTransaction(transactionDebit, wallet, debit, aggregate)
 
 	return &DebitTransactionAdded{wallet, debit, aggregate}
 }
 
-// AddCashInTransaction adds a new cash in type transaction in the given LogBook
+// AddCashInTransaction adds a new cash in type transaction in the given ILogBook
 // returns an event representing the newly added transaction called CashInTransactionAdded
-func AddCashInTransaction(book LogBook, wallet string, credit int, aggregate string) *CashInTransactionAdded {
+func AddCashInTransaction(book ILogBook, wallet string, credit int, aggregate string) *CashInTransactionAdded {
 	book.addTransaction(transactionCashIn, wallet, credit, aggregate)
 
 	return &CashInTransactionAdded{wallet, credit, aggregate}
 }
 
-// AddCashOutTransaction adds a new cash out type transaction in the given LogBook
+// AddCashOutTransaction adds a new cash out type transaction in the given ILogBook
 // returns an event representing the newly added transaction called CashOutTransactionAdded
-func AddCashOutTransaction(book LogBook, wallet string, debit int, aggregate string) *CashOutTransactionAdded {
+func AddCashOutTransaction(book ILogBook, wallet string, debit int, aggregate string) *CashOutTransactionAdded {
 	book.addTransaction(transactionCashOut, wallet, debit, aggregate)
 
 	return &CashOutTransactionAdded{wallet, debit, aggregate}
@@ -58,7 +64,7 @@ func AddCashOutTransaction(book LogBook, wallet string, debit int, aggregate str
 
 // WalletBalance returns the current balance of a wallet based on its transactions
 // returns an error if wallet has no transactions
-func WalletBalance(book LogBook, wallet string) (int, error) {
+func WalletBalance(book ILogBook, wallet string) (int, error) {
 	ts, err := book.walletTransactions(wallet)
 
 	if err != nil {
