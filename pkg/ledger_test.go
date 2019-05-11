@@ -3,16 +3,12 @@ package ledger
 import "testing"
 
 func TestAddCreditTransaction(t *testing.T) {
-	ledger := setupMockLedger()
+	book := setupMockLogBook()
 	walletID := "4"
 	aggID := "1114"
 	credit := 10000
 
-	event, err := AddCreditTransaction(ledger, walletID, credit, aggID)
-
-	if err != nil {
-		t.Error("AddCreditTransaction returned error: ", err)
-	}
+	event := AddCreditTransaction(book, walletID, credit, aggID)
 
 	if event.Wallet != walletID {
 		t.Error("CreditTransactionAdded event has incorrect destination ID")
@@ -28,16 +24,12 @@ func TestAddCreditTransaction(t *testing.T) {
 }
 
 func TestAddDebitTransaction(t *testing.T) {
-	ledger := setupMockLedger()
+	book := setupMockLogBook()
 	walletID := "4"
 	aggID := "1114"
 	debit := 10000
 
-	event, err := AddDebitTransaction(ledger, walletID, debit, aggID)
-
-	if err != nil {
-		t.Error("AddDebitTransaction returned error: ", err)
-	}
+	event := AddDebitTransaction(book, walletID, debit, aggID)
 
 	if event.Wallet != walletID {
 		t.Error("DebitTransactionAdded event has incorrect wallet ID")
@@ -53,45 +45,93 @@ func TestAddDebitTransaction(t *testing.T) {
 }
 
 func TestWalletBalance(t *testing.T) {
-	ledger := setupMockLedger()
-	wallet := "2"
-	expected := 9000
+	t.Run("should return the balance for a given wallet ID", func(t *testing.T) {
+		book := setupMockLogBook()
+		wallet := "1"
+		expected := 100000
 
-	balance, err := WalletBalance(ledger, wallet)
+		balance, err := WalletBalance(book, wallet)
 
-	if err != nil {
-		t.Error("WalletBalance returned error: ", err)
-	}
+		if err != nil {
+			t.Error("WalletBalance returned error: ", err)
+		}
 
-	if balance != expected {
-		t.Errorf("WalletBalance returned %d, should have returned %d", balance, expected)
-	}
+		if balance != expected {
+			t.Errorf("WalletBalance returned %d, should have returned %d", balance, expected)
+		}
+	})
+	t.Run("should return an error if given wallet ID has no transactions", func(t *testing.T) {
+		book := setupMockLogBook()
+		wallet := "4"
+
+		balance, err := WalletBalance(book, wallet)
+
+		if balance != 0 {
+			t.Error("balance returned was not a zero balance")
+		}
+
+		if err == nil {
+			t.Error("no error returned")
+		}
+	})
+	t.Run("should return an error if wallet contains an invalid transaction type", func(t *testing.T) {
+		book := setupMockLogBook()
+		wallet := "5"
+
+		balance, err := WalletBalance(book, wallet)
+
+		if balance != 0 {
+			t.Error("balance returned was not a zero balance")
+		}
+
+		if err == nil {
+			t.Error("no error returned")
+		}
+	})
 }
 
-func TestLedger_AddTransaction(t *testing.T) {
-	ledger := setupMockLedger()
+func TestNewLogBook(t *testing.T) {
+	t.Run("should return a new log book with no transactions or map entries", func(t *testing.T) {
+		book := NewLogBook()
+
+		if len(book.transactions) > 0 {
+			t.Error("transaction slice not empty")
+		}
+
+		if len(book.walletMap) > 0 {
+			t.Error("wallet map not empty")
+		}
+
+		if len(book.aggregateMap) > 0 {
+			t.Error("aggregate map not empty")
+		}
+	})
+}
+
+func TestLogBook_AddTransaction(t *testing.T) {
+	book := setupMockLogBook()
 	transactionType := transactionDebit
 	walletID := "4"
-	aggID := "1114"
+	aggID := "1115"
 	debit := 10000
-	count := len(ledger.transactions)
+	count := len(book.transactions)
 
-	ledger.addTransaction(transactionType, walletID, debit, aggID)
+	book.addTransaction(transactionType, walletID, debit, aggID)
 
-	newCount := len(ledger.transactions)
+	newCount := len(book.transactions)
 
-	if newCount != count + 1 {
-		t.Errorf("ledger count before addTransaction was %d, should be %d afterwards, got %d", count, count + 1, newCount)
+	if newCount != count+1 {
+		t.Errorf("log book transaction count before addTransaction was %d, should be %d afterwards, got %d", count, count+1, newCount)
 	}
 
-	transaction := ledger.transactions[len(ledger.transactions) - 1]
+	transaction := book.transactions[len(book.transactions)-1]
 
-	if *ledger.walletMap[walletID][0] != transaction {
-		t.Error("ledger wallet transaction map should contain the new transaction")
+	if *book.walletMap[walletID][0] != transaction {
+		t.Error("log book wallet transaction map should contain the new transaction")
 	}
 
-	if *ledger.aggregateMap[aggID][0] != transaction {
-		t.Error("ledger aggregate transaction map should container the new transaction")
+	if *book.aggregateMap[aggID][0] != transaction {
+		t.Error("log book aggregate transaction map should container the new transaction")
 	}
 
 	if transaction.Type != transactionType {
@@ -111,43 +151,77 @@ func TestLedger_AddTransaction(t *testing.T) {
 	}
 }
 
-func TestLedger_WalletTransactions(t *testing.T) {
-	ledger := setupMockLedger()
+func TestLogBook_WalletTransactions(t *testing.T) {
+	t.Run("should return all transactions for a given wallet ID", func(t *testing.T) {
+		book := setupMockLogBook()
 
-	wallet := "1"
+		wallet := "1"
 
-	transactions, err := ledger.walletTransactions(wallet)
+		transactions, err := book.walletTransactions(wallet)
 
-	if err != nil {
-		t.Error("walletTransactions returned error: ", err)
-	}
+		if err != nil {
+			t.Error("walletTransactions returned error: ", err)
+		}
 
-	count := len(transactions)
+		count := len(transactions)
 
-	if count != 5 {
-		t.Errorf("mock ledger contains 5 entries for wallet (%s), walletTransactions returned %d", wallet, count)
-	}
+		if count != 7 {
+			t.Errorf("mock log book contains 7 entries for wallet (%s), walletTransactions returned %d", wallet, count)
+		}
+	})
+	t.Run("should return an error if the given wallet ID has no transactions", func(t *testing.T) {
+		book := setupMockLogBook()
+
+		wallet := "11"
+
+		transactions, err := book.walletTransactions(wallet)
+
+		if transactions != nil {
+			t.Error("non-nil value returned for transactions on error")
+		}
+
+		if err == nil {
+			t.Error("no error returned")
+		}
+	})
 }
 
-func TestLedger_AggregateTransactions(t *testing.T) {
-	ledger := setupMockLedger()
+func TestLogBook_AggregateTransactions(t *testing.T) {
+	t.Run("should return all transactions for a given aggregate ID", func(t *testing.T) {
+		book := setupMockLogBook()
 
-	aggregate := "1112"
+		aggregate := "1112"
 
-	transactions, err := ledger.aggregateTransactions(aggregate)
+		transactions, err := book.aggregateTransactions(aggregate)
 
-	if err != nil {
-		t.Error("aggregateTransactions returned error: ", err)
-	}
+		if err != nil {
+			t.Error("aggregateTransactions returned error: ", err)
+		}
 
-	count := len(transactions)
+		count := len(transactions)
 
-	if count != 3 {
-		t.Errorf("mock ledger contains 3 entries for aggregate (%s), aggregateTransactions returned %d", aggregate, count)
-	}
+		if count != 3 {
+			t.Errorf("mock log book contains 3 entries for aggregate (%s), aggregateTransactions returned %d", aggregate, count)
+		}
+	})
+	t.Run("should return an error if no transactions are present for the given aggregate ID", func(t *testing.T) {
+		book := setupMockLogBook()
+
+		aggregate := "9999"
+
+		transactions, err := book.aggregateTransactions(aggregate)
+
+		if transactions != nil {
+			t.Error("non-nil value returned for transactions")
+		}
+
+		if err == nil {
+			t.Error("no error returned")
+		}
+	})
 }
 
-func setupMockLedger() Ledger {
+func setupMockLogBook() LogBook {
 	t1 := Transaction{transactionCashIn, "1", 100000, "1111"}
 	t2 := Transaction{transactionCashIn, "1", 10000, "1112"}
 	t3 := Transaction{transactionDebit, "1", 10000, "1112"}
@@ -156,10 +230,14 @@ func setupMockLedger() Ledger {
 	t6 := Transaction{transactionCredit, "1", 1000, "1113"}
 	t7 := Transaction{transactionDebit, "1", 1000, "1113"}
 	t8 := Transaction{transactionCredit, "3", 1000, "1113"}
+	t9 := Transaction{transactionDebit, "2", 1000, "1114"}
+	t10 := Transaction{transactionCredit, "1", 1000, "1114"}
+	t11 := Transaction{transactionCashOut, "1", 1000, "1114"}
+	t12 := Transaction{"invalid", "5", 1000, "2222"}
 
-	transactions := []Transaction{t1, t2, t3, t4, t5, t6, t7, t8}
+	transactions := []Transaction{t1, t2, t3, t4, t5, t6, t7, t8, t9, t10, t11, t12}
 
-	l := Ledger{transactions, make(map[string][]*Transaction), make(map[string][]*Transaction)}
+	l := LogBook{transactions, make(map[string][]*Transaction), make(map[string][]*Transaction)}
 
 	for _, t := range l.transactions {
 		l.addWalletMapEntry(t)

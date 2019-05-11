@@ -9,33 +9,41 @@ const (
 	transactionCashOut = "cash out"
 )
 
+// Transaction represents a entry in a LogBook
 type Transaction struct {
-	Type      string `json:"type"`
-	Wallet    string `json:"wallet"`
-	Amount    int    `json:"amount"`
-	Aggregate string `json:"aggregate"`
+	Type      string `json:"type"`      // the type of transaction, can be "credit", "debit", "cash in", or "cash out"
+	Wallet    string `json:"wallet"`    // the ID of the wallet associated with this transaction
+	Amount    int    `json:"amount"`    // the amount involved in the transaction
+	Aggregate string `json:"aggregate"` // the ID used to identify a group of transactions
 }
 
-type Ledger struct {
-	transactions []Transaction
-	walletMap    map[string][]*Transaction
-	aggregateMap map[string][]*Transaction
+// LogBook represents a collection of transactions showing credit/debit actions against a given wallet
+type LogBook struct {
+	transactions []Transaction             // the collection of transactions in the book
+	walletMap    map[string][]*Transaction // bookmarks for each wallet pointing to all transactions for that wallet
+	aggregateMap map[string][]*Transaction // bookmarks for each aggregate pointing to all transactions for that aggregate
 }
 
-func AddCreditTransaction(ledger Ledger, wallet string, credit int, aggregate string) (*CreditTransactionAdded, error) {
-	ledger.addTransaction(transactionCredit, wallet, credit, aggregate)
+// AddCreditTransaction adds a new credit transaction in the given LogBook
+// returns a event representing the newly added transaction called CreditTransactionAdded
+func AddCreditTransaction(book LogBook, wallet string, credit int, aggregate string) *CreditTransactionAdded {
+	book.addTransaction(transactionCredit, wallet, credit, aggregate)
 
-	return &CreditTransactionAdded{wallet, credit, aggregate}, nil
+	return &CreditTransactionAdded{wallet, credit, aggregate}
 }
 
-func AddDebitTransaction(ledger Ledger, wallet string, debit int, aggregate string) (*DebitTransactionAdded, error) {
-	ledger.addTransaction(transactionDebit, wallet, debit, aggregate)
+// AddDebitTransaction adds a new debit type transaction in the given LogBook
+// returns an event representing the newly added transaction called DebitTransactionAdded
+func AddDebitTransaction(book LogBook, wallet string, debit int, aggregate string) *DebitTransactionAdded {
+	book.addTransaction(transactionDebit, wallet, debit, aggregate)
 
-	return &DebitTransactionAdded{wallet, debit, aggregate}, nil
+	return &DebitTransactionAdded{wallet, debit, aggregate}
 }
 
-func WalletBalance(ledger Ledger, wallet string) (int, error) {
-	ts, err := ledger.walletTransactions(wallet)
+// WalletBalance returns the current balance of a wallet based on its transactions
+// returns an error if wallet has no transactions
+func WalletBalance(book LogBook, wallet string) (int, error) {
+	ts, err := book.walletTransactions(wallet)
 
 	if err != nil {
 		return 0, err
@@ -61,15 +69,16 @@ func WalletBalance(ledger Ledger, wallet string) (int, error) {
 	return b, nil
 }
 
-func newLedger() *Ledger {
-	return &Ledger{
+// NewLogBook returns a new LogBook with no existing transactions
+func NewLogBook() *LogBook {
+	return &LogBook{
 		transactions: []Transaction{},
 		walletMap:    make(map[string][]*Transaction),
 		aggregateMap: make(map[string][]*Transaction),
 	}
 }
 
-func (l *Ledger) addTransaction(transactionType string, wallet string, amount int, aggregate string) {
+func (l *LogBook) addTransaction(transactionType string, wallet string, amount int, aggregate string) {
 	// Create transaction
 	t := Transaction{transactionType, wallet, amount, aggregate}
 
@@ -80,7 +89,7 @@ func (l *Ledger) addTransaction(transactionType string, wallet string, amount in
 	l.addAggregateMapEntry(t)
 }
 
-func (l *Ledger) addWalletMapEntry(transaction Transaction) {
+func (l *LogBook) addWalletMapEntry(transaction Transaction) {
 	// create wallet map entry if necessary
 	if _, ok := l.walletMap[transaction.Wallet]; !ok {
 		l.walletMap[transaction.Wallet] = []*Transaction{}
@@ -90,7 +99,7 @@ func (l *Ledger) addWalletMapEntry(transaction Transaction) {
 	l.walletMap[transaction.Wallet] = append(l.walletMap[transaction.Wallet], &transaction)
 }
 
-func (l *Ledger) addAggregateMapEntry(transaction Transaction) {
+func (l *LogBook) addAggregateMapEntry(transaction Transaction) {
 	// create aggregate map entry if necessary
 	if _, ok := l.aggregateMap[transaction.Aggregate]; !ok {
 		l.aggregateMap[transaction.Aggregate] = []*Transaction{}
@@ -100,7 +109,7 @@ func (l *Ledger) addAggregateMapEntry(transaction Transaction) {
 	l.aggregateMap[transaction.Aggregate] = append(l.aggregateMap[transaction.Aggregate], &transaction)
 }
 
-func (l *Ledger) walletTransactions(wallet string) ([]*Transaction, error) {
+func (l *LogBook) walletTransactions(wallet string) ([]*Transaction, error) {
 	if t, ok := l.walletMap[wallet]; ok {
 		return t, nil
 	} else {
@@ -108,7 +117,7 @@ func (l *Ledger) walletTransactions(wallet string) ([]*Transaction, error) {
 	}
 }
 
-func (l *Ledger) aggregateTransactions(aggregate string) ([]*Transaction, error) {
+func (l *LogBook) aggregateTransactions(aggregate string) ([]*Transaction, error) {
 	if t, ok := l.aggregateMap[aggregate]; ok {
 		return t, nil
 	} else {
