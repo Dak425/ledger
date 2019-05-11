@@ -2,6 +2,7 @@ package http
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
 
 	"gitlab.com/patchwell/ledger"
@@ -50,7 +51,7 @@ func (s *Server) runWalletBalanceQuery(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusNotFound)
 	}
 
-	s.respondWithJSON(w, balance)
+	fmt.Fprint(w, balance)
 }
 
 func (s *Server) runWalletTransactionsQuery(w http.ResponseWriter, r *http.Request) {
