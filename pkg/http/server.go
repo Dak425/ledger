@@ -2,7 +2,6 @@ package http
 
 import (
 	"encoding/json"
-	"fmt"
 	"net/http"
 
 	"gitlab.com/patchwell/ledger"
@@ -51,7 +50,7 @@ func (s *Server) runWalletBalanceQuery(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusNotFound)
 	}
 
-	fmt.Fprint(w, balance)
+	s.respondWithJSON(w, balance)
 }
 
 func (s *Server) runWalletTransactionsQuery(w http.ResponseWriter, r *http.Request) {
@@ -64,12 +63,7 @@ func (s *Server) runWalletTransactionsQuery(w http.ResponseWriter, r *http.Reque
 		return
 	}
 
-	err = json.NewEncoder(w).Encode(transactions)
-
-	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
-		return
-	}
+	s.respondWithJSON(w, transactions)
 }
 
 func (s *Server) runAggregateTransactionsQuery(w http.ResponseWriter, r *http.Request) {
@@ -82,7 +76,13 @@ func (s *Server) runAggregateTransactionsQuery(w http.ResponseWriter, r *http.Re
 		return
 	}
 
-	err = json.NewEncoder(w).Encode(transactions)
+	s.respondWithJSON(w, transactions)
+}
+
+func (s *Server) respondWithJSON(w http.ResponseWriter, data interface{}) {
+	w.Header().Set("content-type", "application/json")
+
+	err := json.NewEncoder(w).Encode(data)
 
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
