@@ -9,7 +9,8 @@ import (
 )
 
 func main() {
-	server := &http2.Server{memory.NewInMemoryBook()}
+	book := memory.NewInMemoryBook()
+	server := http2.NewServer(book)
 
 	if err := http.ListenAndServe(":5000", server); err != nil {
 		log.Fatalf("could not listen on port 5000 %v", err)
