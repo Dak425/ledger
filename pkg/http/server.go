@@ -64,12 +64,7 @@ func (s *Server) runWalletTransactionsQuery(w http.ResponseWriter, r *http.Reque
 		return
 	}
 
-	err = json.NewEncoder(w).Encode(transactions)
-
-	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
-		return
-	}
+	s.respondWithJSON(w, transactions)
 }
 
 func (s *Server) runAggregateTransactionsQuery(w http.ResponseWriter, r *http.Request) {
@@ -82,7 +77,13 @@ func (s *Server) runAggregateTransactionsQuery(w http.ResponseWriter, r *http.Re
 		return
 	}
 
-	err = json.NewEncoder(w).Encode(transactions)
+	s.respondWithJSON(w, transactions)
+}
+
+func (s *Server) respondWithJSON(w http.ResponseWriter, data interface{}) {
+	w.Header().Set("content-type", "application/json")
+
+	err := json.NewEncoder(w).Encode(data)
 
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)

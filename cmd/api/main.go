@@ -9,7 +9,7 @@ import (
 )
 
 func main() {
-	book := memory.NewInMemoryBook()
+	book := memory.NewMockInMemoryBook()
 	server := http2.NewServer(book)
 
 	if err := http.ListenAndServe(":5000", server); err != nil {
