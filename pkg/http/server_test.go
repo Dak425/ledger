@@ -10,10 +10,6 @@ import (
 	"testing"
 )
 
-type TransactionResponse struct {
-	Transactions []ledger.Transaction
-}
-
 func TestGETWalletBalance(t *testing.T) {
 	book := memory.NewMockInMemoryBook()
 	server := NewServer(book)

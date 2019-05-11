@@ -7,6 +7,7 @@ import (
 
 	"gitlab.com/patchwell/ledger"
 	"gitlab.com/patchwell/ledger/pkg/command"
+	"gitlab.com/patchwell/ledger/pkg/query"
 )
 
 type Server struct {
@@ -44,7 +45,7 @@ func (s *Server) runAddCreditTransactionCommand(w http.ResponseWriter, r *http.R
 func (s *Server) runWalletBalanceQuery(w http.ResponseWriter, r *http.Request) {
 	wallet := r.URL.Path[len("/balance/wallet/"):]
 
-	balance, err := command.WalletBalance(s.book, wallet)
+	balance, err := query.WalletBalance(s.book, wallet)
 
 	if err != nil {
 		w.WriteHeader(http.StatusNotFound)
@@ -56,7 +57,7 @@ func (s *Server) runWalletBalanceQuery(w http.ResponseWriter, r *http.Request) {
 func (s *Server) runWalletTransactionsQuery(w http.ResponseWriter, r *http.Request) {
 	wallet := r.URL.Path[len("/transactions/wallet/"):]
 
-	transactions, err := command.WalletTransactions(s.book, wallet)
+	transactions, err := query.WalletTransactions(s.book, wallet)
 
 	if err != nil {
 		w.WriteHeader(http.StatusNotFound)
@@ -74,7 +75,7 @@ func (s *Server) runWalletTransactionsQuery(w http.ResponseWriter, r *http.Reque
 func (s *Server) runAggregateTransactionsQuery(w http.ResponseWriter, r *http.Request) {
 	aggregate := r.URL.Path[len("/transactions/aggregate/"):]
 
-	transactions, err := command.AggregateTransactions(s.book, aggregate)
+	transactions, err := query.AggregateTransactions(s.book, aggregate)
 
 	if err != nil {
 		w.WriteHeader(http.StatusNotFound)
