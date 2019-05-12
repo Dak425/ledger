@@ -10,6 +10,12 @@ import (
 	"gitlab.com/patchwell/ledger/pkg/query"
 )
 
+type addCreditTransactionDTO struct {
+	Wallet    string `json:"wallet"`
+	Credit    int    `json:"credit"`
+	Aggregate string `json:"aggregate"`
+}
+
 type Server struct {
 	book ledger.Book
 	http.Handler
@@ -32,7 +38,16 @@ func NewServer(book ledger.Book) *Server {
 }
 
 func (s *Server) runAddCreditTransactionCommand(w http.ResponseWriter, r *http.Request) {
-	_, err := command.AddCreditTransaction(s.book, "1", 100, "2222")
+	var input addCreditTransactionDTO
+
+	err := json.NewDecoder(r.Body).Decode(&input)
+
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	_, err = command.AddCreditTransaction(s.book, input.Wallet, input.Credit, input.Aggregate)
 
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
@@ -87,6 +102,5 @@ func (s *Server) respondWithJSON(w http.ResponseWriter, data interface{}) {
 
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
-		return
 	}
 }
