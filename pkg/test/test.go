@@ -81,10 +81,10 @@ func AssertWalletBalance(t *testing.T, got, want int) {
 	}
 }
 
-func CreateTempFile(t *testing.T, data string) (io.ReadWriteSeeker, func()) {
+func CreateTempFile(t *testing.T, data string, name string) (io.ReadWriteSeeker, func()) {
 	t.Helper()
 
-	file, err := ioutil.TempFile("", "db")
+	file, err := ioutil.TempFile("", name)
 	if err != nil {
 		t.Fatalf("unable to create temp file %v", err)
 	}

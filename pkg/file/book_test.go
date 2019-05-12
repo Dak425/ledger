@@ -11,8 +11,9 @@ func TestBook_WalletTransactions(t *testing.T) {
 	data := `[
 		{"type": "credit", "wallet": "1", "amount": 100000, "aggregate": "1111"},
 		{"type": "debit", "wallet": "1", "amount": 50000, "aggregate": "1112"}]`
+	
 	t.Run("should return all transactions for a given wallet ID", func(t *testing.T) {
-		database, clean := test.CreateTempFile(t, data)
+		database, clean := test.CreateTempFile(t, data, "db")
 		defer clean()
 
 		book := Book{database}
@@ -38,7 +39,7 @@ func TestBook_WalletBalance(t *testing.T) {
 		{"type": "debit", "wallet": "1", "amount": 50000, "aggregate": "1112"}]`
 
 	t.Run("should return the balance of the given wallet", func(t *testing.T) {
-		database, clean := test.CreateTempFile(t, data)
+		database, clean := test.CreateTempFile(t, data, "db")
 		defer clean()
 
 		book := Book{database}
