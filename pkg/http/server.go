@@ -10,6 +10,8 @@ import (
 	"gitlab.com/patchwell/ledger/pkg/query"
 )
 
+const jsonContentType = "application/json"
+
 type addCreditTransactionDTO struct {
 	Wallet    string `json:"wallet"`
 	Credit    int    `json:"credit"`

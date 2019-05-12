@@ -1,7 +1,10 @@
 package test
 
 import (
+	"io"
+	"io/ioutil"
 	"net/http/httptest"
+	"os"
 	"reflect"
 	"testing"
 
@@ -62,4 +65,35 @@ func AssertTransactions(t *testing.T, got, want []ledger.Transaction) {
 	if !reflect.DeepEqual(got, want) {
 		t.Errorf("transaction slices are different, got '%v', wanted '%v'", got, want)
 	}
+}
+
+func AssertTransactinCount(t *testing.T, got, want int) {
+	t.Helper()
+	if got != want {
+		t.Errorf("got incorrect amount of transactions, got %d, wanted %d", got, want)
+	}
+}
+
+func AssertWalletBalance(t *testing.T, got, want int) {
+	t.Helper()
+	if got != want {
+		t.Errorf("got incorrect wallet balance, got %d, wanted %d", got, want)
+	}
+}
+
+func CreateTempFile(t *testing.T, data string) (io.ReadWriteSeeker, func()) {
+	t.Helper()
+
+	file, err := ioutil.TempFile("", "db")
+	if err != nil {
+		t.Fatalf("unable to create temp file %v", err)
+	}
+
+	file.Write([]byte(data))
+
+	cleanUp := func() {
+		os.Remove(file.Name())
+	}
+
+	return file, cleanUp
 }

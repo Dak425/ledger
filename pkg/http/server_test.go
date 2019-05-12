@@ -12,6 +12,7 @@ import (
 
 	"gitlab.com/patchwell/ledger"
 	"gitlab.com/patchwell/ledger/pkg/memory"
+	"gitlab.com/patchwell/ledger/pkg/test"
 )
 
 func TestGETWalletBalance(t *testing.T) {
@@ -24,8 +25,8 @@ func TestGETWalletBalance(t *testing.T) {
 
 		server.ServeHTTP(response, request)
 
-		assertStatus(t, response.Code, http.StatusOK)
-		assertResponseBody(t, response.Body.String(), "100000")
+		test.AssertStatus(t, response.Code, http.StatusOK)
+		test.AssertResponseBody(t, response.Body.String(), "100000")
 	})
 	t.Run("returns the current balance of wallet '2'", func(t *testing.T) {
 		request := newGetWalletBalanceRequest("2")
@@ -33,8 +34,8 @@ func TestGETWalletBalance(t *testing.T) {
 
 		server.ServeHTTP(response, request)
 
-		assertStatus(t, response.Code, http.StatusOK)
-		assertResponseBody(t, response.Body.String(), "8000")
+		test.AssertStatus(t, response.Code, http.StatusOK)
+		test.AssertResponseBody(t, response.Body.String(), "8000")
 	})
 	t.Run("returns 404 when wallet is not found", func(t *testing.T) {
 		request := newGetWalletBalanceRequest("-99")
@@ -42,7 +43,7 @@ func TestGETWalletBalance(t *testing.T) {
 
 		server.ServeHTTP(response, request)
 
-		assertStatus(t, response.Code, http.StatusNotFound)
+		test.AssertStatus(t, response.Code, http.StatusNotFound)
 	})
 }
 
@@ -73,7 +74,8 @@ func TestGETWalletTransactions(t *testing.T) {
 			t.Error("response did not contain the expected transactions")
 		}
 
-		assertStatus(t, response.Code, http.StatusOK)
+		test.AssertStatus(t, response.Code, http.StatusOK)
+		test.AssertContentType(t, response, jsonContentType)
 	})
 	t.Run("returns 404 if wallet has no transactions", func(t *testing.T) {
 		request := newGetWalletTransactionsRequest("99")
@@ -81,7 +83,7 @@ func TestGETWalletTransactions(t *testing.T) {
 
 		server.ServeHTTP(response, request)
 
-		assertStatus(t, response.Code, http.StatusNotFound)
+		test.AssertStatus(t, response.Code, http.StatusNotFound)
 	})
 }
 
@@ -100,11 +102,14 @@ func TestGETAggregateTransactions(t *testing.T) {
 
 		transactions := getTransactionsFromResponse(t, response.Body)
 
+		test.AssertTransactions(t, transactions, wantedTransactions)
+
 		if !reflect.DeepEqual(transactions, wantedTransactions) {
 			t.Error("response did not contain the expected transactions")
 		}
 
-		assertStatus(t, response.Code, http.StatusOK)
+		test.AssertStatus(t, response.Code, http.StatusOK)
+		test.AssertContentType(t, response, jsonContentType)
 	})
 	t.Run("returns 404 if aggregate has no transactions", func(t *testing.T) {
 		request := newGetAggregateTransactionsRequest("9999")
@@ -112,7 +117,7 @@ func TestGETAggregateTransactions(t *testing.T) {
 
 		server.ServeHTTP(response, request)
 
-		assertStatus(t, response.Code, http.StatusNotFound)
+		test.AssertStatus(t, response.Code, http.StatusNotFound)
 	})
 }
 
@@ -130,7 +135,7 @@ func TestPOSTCreditTransaction(t *testing.T) {
 
 		got := len(book.Transactions())
 
-		assertStatus(t, response.Code, http.StatusAccepted)
+		test.AssertStatus(t, response.Code, http.StatusAccepted)
 
 		if got != want {
 			t.Errorf("ledger book has invalid transaction count, got %d, wanted %d", got, want)
@@ -140,10 +145,10 @@ func TestPOSTCreditTransaction(t *testing.T) {
 
 		lastTransaction := transactions[len(transactions)-1]
 
-		assertTransactionType(t, lastTransaction.Type, ledger.TransactionCredit)
-		assertTransactionWallet(t, lastTransaction.Wallet, "1")
-		assertTransactionAmount(t, lastTransaction.Amount, 100)
-		assertTransactionAggregate(t, lastTransaction.Aggregate, "2222")
+		test.AssertTransactionType(t, lastTransaction.Type, ledger.TransactionCredit)
+		test.AssertTransactionWallet(t, lastTransaction.Wallet, "1")
+		test.AssertTransactionAmount(t, lastTransaction.Amount, 100)
+		test.AssertTransactionAggregate(t, lastTransaction.Aggregate, "2222")
 	})
 }
 
@@ -182,46 +187,4 @@ func getTransactionsFromResponse(t *testing.T, body io.Reader) (transactions []l
 	}
 
 	return
-}
-
-func assertResponseBody(t *testing.T, got, want string) {
-	t.Helper()
-	if got != want {
-		t.Errorf("response body is wrong, got '%s', wanted '%s'", got, want)
-	}
-}
-
-func assertStatus(t *testing.T, got, want int) {
-	t.Helper()
-	if got != want {
-		t.Errorf("did not get correct status, got %d, wanted %d", got, want)
-	}
-}
-
-func assertTransactionType(t *testing.T, got, want string) {
-	t.Helper()
-	if got != want {
-		t.Errorf("transaction type is incorrect, got '%s', wanted '%s'", got, want)
-	}
-}
-
-func assertTransactionWallet(t *testing.T, got, want string) {
-	t.Helper()
-	if got != want {
-		t.Errorf("transaction has incorrect wallet ID, got '%s', wanted '%s'", got, want)
-	}
-}
-
-func assertTransactionAmount(t *testing.T, got, want int) {
-	t.Helper()
-	if got != want {
-		t.Errorf("transaction has incorrect amount, got %d, wanted %d", got, want)
-	}
-}
-
-func assertTransactionAggregate(t *testing.T, got, want string) {
-	t.Helper()
-	if got != want {
-		t.Errorf("transaction has incorrect aggregate ID, got '%s', wanted '%s", got, want)
-	}
 }
