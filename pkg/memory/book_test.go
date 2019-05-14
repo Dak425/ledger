@@ -1,6 +1,7 @@
 package memory
 
 import (
+	"gitlab.com/patchwell/ledger/pkg/test"
 	"testing"
 
 	"gitlab.com/patchwell/ledger"
@@ -29,7 +30,7 @@ func TestBook_AddTransaction(t *testing.T) {
 	transactionType := ledger.TransactionDebit
 	walletID := "4"
 	aggID := "1115"
-	debit := 10000
+	debit := int32(10000)
 	count := len(book.transactions)
 
 	book.AddTransaction(transactionType, walletID, debit, aggID)
@@ -42,13 +43,8 @@ func TestBook_AddTransaction(t *testing.T) {
 
 	transaction := book.transactions[len(book.transactions)-1]
 
-	if *book.walletMap[walletID][0] != transaction {
-		t.Error("log book wallet transaction map should contain the new transaction")
-	}
-
-	if *book.aggregateMap[aggID][0] != transaction {
-		t.Error("log book aggregate transaction map should container the new transaction")
-	}
+	test.AssertTransaction(t, *book.walletMap[walletID][0], transaction)
+	test.AssertTransaction(t, *book.aggregateMap[aggID][0], transaction)
 
 	if transaction.Type != transactionType {
 		t.Errorf("new transaction has type of %s, should be %s", transaction.Type, transactionType)

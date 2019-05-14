@@ -1,14 +1,13 @@
 package test
 
 import (
+	ledgerpb "gitlab.com/patchwell/ledger/gen/api/protobuf"
 	"io"
 	"io/ioutil"
 	"net/http/httptest"
 	"os"
 	"reflect"
 	"testing"
-
-	"gitlab.com/patchwell/ledger"
 )
 
 func AssertResponseBody(t *testing.T, got, want string) {
@@ -46,7 +45,7 @@ func AssertTransactionWallet(t *testing.T, got, want string) {
 	}
 }
 
-func AssertTransactionAmount(t *testing.T, got, want int) {
+func AssertTransactionAmount(t *testing.T, got, want int32) {
 	t.Helper()
 	if got != want {
 		t.Errorf("transaction has incorrect amount, got %d, wanted %d", got, want)
@@ -60,7 +59,14 @@ func AssertTransactionAggregate(t *testing.T, got, want string) {
 	}
 }
 
-func AssertTransactions(t *testing.T, got, want []ledger.Transaction) {
+func AssertTransaction(t *testing.T, got, want ledgerpb.Transaction) {
+	t.Helper()
+	if !reflect.DeepEqual(got, want) {
+		t.Errorf("transactions are different, got '%v', wanted '%v'", got, want)
+	}
+}
+
+func AssertTransactions(t *testing.T, got, want []ledgerpb.Transaction) {
 	t.Helper()
 	if !reflect.DeepEqual(got, want) {
 		t.Errorf("transaction slices are different, got '%v', wanted '%v'", got, want)
@@ -74,7 +80,7 @@ func AssertTransactinCount(t *testing.T, got, want int) {
 	}
 }
 
-func AssertWalletBalance(t *testing.T, got, want int) {
+func AssertWalletBalance(t *testing.T, got, want int32) {
 	t.Helper()
 	if got != want {
 		t.Errorf("got incorrect wallet balance, got %d, wanted %d", got, want)

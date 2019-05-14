@@ -1,8 +1,17 @@
 package ledger
 
+import ledgerpb "gitlab.com/patchwell/ledger/gen/api/protobuf"
+
+const (
+	TransactionCredit  = "credit"
+	TransactionDebit   = "debit"
+	TransactionCashIn  = "cash in"
+	TransactionCashOut = "cash out"
+)
+
 type Book interface {
-	AddTransaction(transactionType string, wallet string, amount int, aggregate string) error
-	Transactions() []Transaction
-	WalletTransactions(wallet string) ([]*Transaction, error)
-	AggregateTransactions(aggregate string) ([]*Transaction, error)
+	AddTransaction(transactionType string, wallet string, amount int32, aggregate string) error
+	Transactions() []ledgerpb.Transaction
+	WalletTransactions(wallet string) ([]*ledgerpb.Transaction, error)
+	AggregateTransactions(aggregate string) ([]*ledgerpb.Transaction, error)
 }

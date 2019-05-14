@@ -6,7 +6,7 @@ import (
 
 // AddCreditTransaction adds a new credit transaction in the given Book
 // returns a event representing the newly added transaction called CreditTransactionAdded
-func AddCreditTransaction(book ledger.Book, wallet string, credit int, aggregate string) (*ledger.CreditTransactionAdded, error) {
+func AddCreditTransaction(book ledger.Book, wallet string, credit int32, aggregate string) (*ledger.CreditTransactionAdded, error) {
 	err := book.AddTransaction(ledger.TransactionCredit, wallet, credit, aggregate)
 
 	if err != nil {
@@ -18,7 +18,7 @@ func AddCreditTransaction(book ledger.Book, wallet string, credit int, aggregate
 
 // AddDebitTransaction adds a new debit type transaction in the given Book
 // returns an event representing the newly added transaction called DebitTransactionAdded
-func AddDebitTransaction(book ledger.Book, wallet string, debit int, aggregate string) (*ledger.DebitTransactionAdded, error) {
+func AddDebitTransaction(book ledger.Book, wallet string, debit int32, aggregate string) (*ledger.DebitTransactionAdded, error) {
 	err := book.AddTransaction(ledger.TransactionDebit, wallet, debit, aggregate)
 
 	if err != nil {
@@ -30,7 +30,7 @@ func AddDebitTransaction(book ledger.Book, wallet string, debit int, aggregate s
 
 // AddCashInTransaction adds a new cash in type transaction in the given Book
 // returns an event representing the newly added transaction called CashInTransactionAdded
-func AddCashInTransaction(book ledger.Book, wallet string, credit int, aggregate string) (*ledger.CashInTransactionAdded, error) {
+func AddCashInTransaction(book ledger.Book, wallet string, credit int32, aggregate string) (*ledger.CashInTransactionAdded, error) {
 	err := book.AddTransaction(ledger.TransactionCashIn, wallet, credit, aggregate)
 
 	if err != nil {
@@ -42,7 +42,7 @@ func AddCashInTransaction(book ledger.Book, wallet string, credit int, aggregate
 
 // AddCashOutTransaction adds a new cash out type transaction in the given Book
 // returns an event representing the newly added transaction called CashOutTransactionAdded
-func AddCashOutTransaction(book ledger.Book, wallet string, debit int, aggregate string) (*ledger.CashOutTransactionAdded, error) {
+func AddCashOutTransaction(book ledger.Book, wallet string, debit int32, aggregate string) (*ledger.CashOutTransactionAdded, error) {
 	err := book.AddTransaction(ledger.TransactionCashOut, wallet, debit, aggregate)
 
 	if err != nil {

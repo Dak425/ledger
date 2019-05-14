@@ -2,20 +2,21 @@ package query
 
 import (
 	"errors"
+	ledgerpb "gitlab.com/patchwell/ledger/gen/api/protobuf"
 
 	"gitlab.com/patchwell/ledger"
 )
 
 // WalletBalance returns the current balance of a wallet based on its transactions
 // returns an error if wallet has no transactions
-func WalletBalance(book ledger.Book, wallet string) (int, error) {
+func WalletBalance(book ledger.Book, wallet string) (int32, error) {
 	ts, err := book.WalletTransactions(wallet)
 
 	if err != nil {
 		return 0, err
 	}
 
-	b := 0
+	b := int32(0)
 
 	for _, t := range ts {
 		switch t.Type {
@@ -35,7 +36,7 @@ func WalletBalance(book ledger.Book, wallet string) (int, error) {
 	return b, nil
 }
 
-func WalletTransactions(book ledger.Book, wallet string) ([]*ledger.Transaction, error) {
+func WalletTransactions(book ledger.Book, wallet string) ([]*ledgerpb.Transaction, error) {
 	t, err := book.WalletTransactions(wallet)
 
 	if err != nil {
@@ -45,7 +46,7 @@ func WalletTransactions(book ledger.Book, wallet string) ([]*ledger.Transaction,
 	return t, nil
 }
 
-func AggregateTransactions(book ledger.Book, aggregate string) ([]*ledger.Transaction, error) {
+func AggregateTransactions(book ledger.Book, aggregate string) ([]*ledgerpb.Transaction, error) {
 	t, err := book.AggregateTransactions(aggregate)
 
 	if err != nil {

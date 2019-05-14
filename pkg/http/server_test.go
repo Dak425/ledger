@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	ledgerpb "gitlab.com/patchwell/ledger/gen/api/protobuf"
 	"io"
 	"net/http"
 	"net/http/httptest"
@@ -50,7 +51,7 @@ func TestGETWalletBalance(t *testing.T) {
 func TestGETWalletTransactions(t *testing.T) {
 	book := memory.NewMockInMemoryBook()
 	server := NewServer(book)
-	wantedTransactions := []ledger.Transaction{
+	wantedTransactions := []ledgerpb.Transaction{
 		{Type: ledger.TransactionCredit, Wallet: "2", Amount: 10000, Aggregate: "1112"},
 		{Type: ledger.TransactionDebit, Wallet: "2", Amount: 1000, Aggregate: "1113"},
 		{Type: ledger.TransactionDebit, Wallet: "2", Amount: 1000, Aggregate: "1114"},
@@ -62,7 +63,7 @@ func TestGETWalletTransactions(t *testing.T) {
 
 		server.ServeHTTP(response, request)
 
-		var transactions []ledger.Transaction
+		var transactions []ledgerpb.Transaction
 
 		err := json.NewDecoder(response.Body).Decode(&transactions)
 
@@ -90,7 +91,7 @@ func TestGETWalletTransactions(t *testing.T) {
 func TestGETAggregateTransactions(t *testing.T) {
 	book := memory.NewMockInMemoryBook()
 	server := NewServer(book)
-	wantedTransactions := []ledger.Transaction{
+	wantedTransactions := []ledgerpb.Transaction{
 		{Type: ledger.TransactionCashIn, Wallet: "1", Amount: 100000, Aggregate: "1111"},
 	}
 
@@ -167,7 +168,7 @@ func newGetAggregateTransactionsRequest(aggregate string) *http.Request {
 	return req
 }
 
-func newPostCreditTransactionRequest(wallet string, credit int, aggregate string) *http.Request {
+func newPostCreditTransactionRequest(wallet string, credit int32, aggregate string) *http.Request {
 	payload := addCreditTransactionDTO{
 		Wallet:    wallet,
 		Credit:    credit,
@@ -178,7 +179,7 @@ func newPostCreditTransactionRequest(wallet string, credit int, aggregate string
 	return req
 }
 
-func getTransactionsFromResponse(t *testing.T, body io.Reader) (transactions []ledger.Transaction) {
+func getTransactionsFromResponse(t *testing.T, body io.Reader) (transactions []ledgerpb.Transaction) {
 	t.Helper()
 	err := json.NewDecoder(body).Decode(&transactions)
 

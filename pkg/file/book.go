@@ -3,6 +3,7 @@ package file
 import (
 	"encoding/json"
 	"fmt"
+	ledgerpb "gitlab.com/patchwell/ledger/gen/api/protobuf"
 	"io"
 
 	"gitlab.com/patchwell/ledger"
@@ -12,8 +13,8 @@ type Book struct {
 	database io.ReadWriteSeeker
 }
 
-func (b *Book) WalletBalance(wallet string) (int, error) {
-	var balance int
+func (b *Book) WalletBalance(wallet string) (int32, error) {
+	var balance int32
 
 	t, err := b.loadTransactions()
 
@@ -39,8 +40,8 @@ func (b *Book) WalletBalance(wallet string) (int, error) {
 	return balance, nil
 }
 
-func (b *Book) WalletTransactions(wallet string) ([]ledger.Transaction, error) {
-	var walletTransactions []ledger.Transaction
+func (b *Book) WalletTransactions(wallet string) ([]*ledgerpb.Transaction, error) {
+	var walletTransactions []*ledgerpb.Transaction
 
 	t, err := b.loadTransactions()
 
@@ -50,15 +51,15 @@ func (b *Book) WalletTransactions(wallet string) ([]ledger.Transaction, error) {
 
 	for _, v := range t {
 		if v.Wallet == wallet {
-			walletTransactions = append(walletTransactions, v)
+			walletTransactions = append(walletTransactions, &v)
 		}
 	}
 
 	return walletTransactions, err
 }
 
-func (b *Book) loadTransactions() ([]ledger.Transaction, error) {
-	var transactions []ledger.Transaction
+func (b *Book) loadTransactions() ([]ledgerpb.Transaction, error) {
+	var transactions []ledgerpb.Transaction
 
 	_, err := b.database.Seek(0, 0)
 	if err != nil {

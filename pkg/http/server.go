@@ -14,7 +14,7 @@ const jsonContentType = "application/json"
 
 type addCreditTransactionDTO struct {
 	Wallet    string `json:"wallet"`
-	Credit    int    `json:"credit"`
+	Credit    int32  `json:"credit"`
 	Aggregate string `json:"aggregate"`
 }
 

@@ -1,9 +1,9 @@
 package file
 
 import (
+	ledgerpb "gitlab.com/patchwell/ledger/gen/api/protobuf"
 	"testing"
 
-	"gitlab.com/patchwell/ledger"
 	"gitlab.com/patchwell/ledger/pkg/test"
 )
 
@@ -11,7 +11,7 @@ func TestBook_WalletTransactions(t *testing.T) {
 	data := `[
 		{"type": "credit", "wallet": "1", "amount": 100000, "aggregate": "1111"},
 		{"type": "debit", "wallet": "1", "amount": 50000, "aggregate": "1112"}]`
-	
+
 	t.Run("should return all transactions for a given wallet ID", func(t *testing.T) {
 		database, clean := test.CreateTempFile(t, data, "db")
 		defer clean()
@@ -24,7 +24,7 @@ func TestBook_WalletTransactions(t *testing.T) {
 			t.Errorf("returned error %v", err)
 		}
 
-		want := []ledger.Transaction{
+		want := []ledgerpb.Transaction{
 			{Type: "credit", Wallet: "1", Amount: 100000, Aggregate: "1111"},
 			{Type: "debit", Wallet: "1", Amount: 50000, Aggregate: "1112"},
 		}
@@ -50,7 +50,7 @@ func TestBook_WalletBalance(t *testing.T) {
 			t.Errorf("returned error, %v", err)
 		}
 
-		want := 50000
+		want := int32(50000)
 
 		test.AssertWalletBalance(t, balance, want)
 	})
