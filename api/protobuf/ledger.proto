@@ -82,6 +82,14 @@ message WalletTransactionsResponse {
     repeated Transaction transactions = 1;
 }
 
+message AggregateTransactionsRequest {
+    string aggregate = 1;
+}
+
+message AggregateTransactionsResponse {
+    repeated Transaction transactions = 1;
+}
+
 service LedgerService {
     rpc AddCreditTransaction(AddCreditTransactionRequest) returns (AddCreditTransactionResponse) {};
     rpc AddDebitTransaction(AddDebitTransactionRequest) returns (AddDebitTransactionResponse) {};
@@ -89,4 +97,5 @@ service LedgerService {
     rpc AddCashOutTransaction(AddCashOutTransactionRequest) returns (AddCashOutTransactionResponse) {};
     rpc WalletBalance(WalletBalanceRequest) returns (WalletBalanceResponse) {};
     rpc WalletTransactions(WalletTransactionsRequest) returns (WalletTransactionsResponse) {};
+    rpc AggregateTransactions(AggregateTransactionsRequest) returns (AggregateTransactionsResponse) {};
 }

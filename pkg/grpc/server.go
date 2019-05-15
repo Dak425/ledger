@@ -29,6 +29,45 @@ func (s *Server) AddCreditTransaction(ctx context.Context, req *ledgerpb.AddCred
 	}, nil
 }
 
+func (s *Server) AddDebitTransaction(ctx context.Context, req *ledgerpb.AddDebitTransactionRequest) (*ledgerpb.AddDebitTransactionResponse, error) {
+	t := req.GetTransaction()
+	err := s.book.AddTransaction(ledger.TransactionDebit, t.GetWallet(), t.GetDebit(), t.GetAggregate())
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &ledgerpb.AddDebitTransactionResponse{
+		Response: "debit transaction added successfully",
+	}, nil
+}
+
+func (s *Server) AddCashInTransaction(ctx context.Context, req *ledgerpb.AddCashInTransactionRequest) (*ledgerpb.AddCashInTransactionResponse, error) {
+	t := req.GetTransaction()
+	err := s.book.AddTransaction(ledger.TransactionCashIn, t.GetWallet(), t.GetCredit(), t.GetAggregate())
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &ledgerpb.AddCashInTransactionResponse{
+		Response: "cash in transaction added successfully",
+	}, nil
+}
+
+func (s *Server) AddCashOutTransaction(ctx context.Context, req *ledgerpb.AddCashOutTransactionRequest) (*ledgerpb.AddCashOutTransactionResponse, error) {
+	t := req.GetTransaction()
+	err := s.book.AddTransaction(ledger.TransactionCashOut, t.GetWallet(), t.GetDebit(), t.GetAggregate())
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &ledgerpb.AddCashOutTransactionResponse{
+		Response: "cash out transaction added successfully",
+	}, nil
+}
+
 func (s *Server) WalletTransactions(ctx context.Context, req *ledgerpb.WalletTransactionsRequest) (*ledgerpb.WalletTransactionsResponse, error) {
 	w := req.GetWallet()
 
@@ -48,6 +87,27 @@ func (s *Server) WalletTransactions(ctx context.Context, req *ledgerpb.WalletTra
 func (s *Server) WalletBalance(ctx context.Context, req *ledgerpb.WalletBalanceRequest) (*ledgerpb.WalletBalanceResponse, error) {
 	w := req.GetWallet()
 
+	b, err := s.book.WalletBalance(w)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &ledgerpb.WalletBalanceResponse{
+		Balance: b,
+	}, nil
+}
+
+func (s *Server) AggregateTransactions(ctx context.Context, req *ledgerpb.AggregateTransactionsRequest) (*ledgerpb.AggregateTransactionsResponse, error) {
+	ts, err := s.book.AggregateTransactions(req.GetAggregate())
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &ledgerpb.AggregateTransactionsResponse{
+		Transactions: ts,
+	}, nil
 }
 
 func toProtoTransaction(transactions []*ledgerpb.Transaction) []*ledgerpb.Transaction {
