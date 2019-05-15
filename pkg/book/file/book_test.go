@@ -1,9 +1,9 @@
 package file
 
 import (
-	ledgerpb "gitlab.com/patchwell/ledger/gen/api/protobuf"
 	"testing"
 
+	ledgerpb "gitlab.com/patchwell/ledger/gen/api/protobuf"
 	"gitlab.com/patchwell/ledger/pkg/test"
 )
 

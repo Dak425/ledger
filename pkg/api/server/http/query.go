@@ -1,4 +1,4 @@
-package query
+package http
 
 import (
 	ledgerpb "gitlab.com/patchwell/ledger/gen/api/protobuf"

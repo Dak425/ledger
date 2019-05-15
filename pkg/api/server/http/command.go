@@ -1,4 +1,4 @@
-package command
+package http
 
 import (
 	"gitlab.com/patchwell/ledger"

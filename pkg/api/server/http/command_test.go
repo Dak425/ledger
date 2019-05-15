@@ -1,9 +1,9 @@
-package command
+package http
 
 import (
+	"gitlab.com/patchwell/ledger/pkg/api/server/httper/http"
+	"gitlab.com/patchwell/ledger/pkg/book/memory"
 	"testing"
-
-	"gitlab.com/patchwell/ledger/pkg/memory"
 )
 
 func TestAddCreditTransaction(t *testing.T) {
@@ -12,7 +12,7 @@ func TestAddCreditTransaction(t *testing.T) {
 	aggID := "1114"
 	credit := 10000
 
-	event, err := AddCreditTransaction(book, walletID, credit, aggID)
+	event, err := http.AddCreditTransaction(book, walletID, credit, aggID)
 
 	if err != nil {
 		t.Errorf("error returned %v", err)
@@ -37,7 +37,7 @@ func TestAddDebitTransaction(t *testing.T) {
 	aggID := "1114"
 	debit := 10000
 
-	event, err := AddDebitTransaction(book, walletID, debit, aggID)
+	event, err := http.AddDebitTransaction(book, walletID, debit, aggID)
 
 	if err != nil {
 		t.Errorf("error returned %v", err)
@@ -63,7 +63,7 @@ func TestAddCashInTransaction(t *testing.T) {
 		aggregate := "3333"
 		credit := 1000
 
-		event, err := AddCashInTransaction(book, wallet, credit, aggregate)
+		event, err := http.AddCashInTransaction(book, wallet, credit, aggregate)
 
 		if err != nil {
 			t.Errorf("error returned %v", err)
@@ -90,7 +90,7 @@ func TestAddCashOutTransaction(t *testing.T) {
 		aggregate := "3333"
 		debit := 1000
 
-		event, err := AddCashOutTransaction(book, wallet, debit, aggregate)
+		event, err := http.AddCashOutTransaction(book, wallet, debit, aggregate)
 
 		if err != nil {
 			t.Errorf("error returned %v", err)

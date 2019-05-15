@@ -3,8 +3,9 @@ package file
 import (
 	"encoding/json"
 	"fmt"
-	ledgerpb "gitlab.com/patchwell/ledger/gen/api/protobuf"
 	"io"
+
+	ledgerpb "gitlab.com/patchwell/ledger/gen/api/protobuf"
 
 	"gitlab.com/patchwell/ledger"
 )

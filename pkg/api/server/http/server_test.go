@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	ledgerpb "gitlab.com/patchwell/ledger/gen/api/protobuf"
+	"gitlab.com/patchwell/ledger/pkg/api"
 	"io"
 	"net/http"
 	"net/http/httptest"
@@ -12,13 +12,14 @@ import (
 	"testing"
 
 	"gitlab.com/patchwell/ledger"
-	"gitlab.com/patchwell/ledger/pkg/memory"
+	ledgerpb "gitlab.com/patchwell/ledger/gen/api/protobuf"
+	"gitlab.com/patchwell/ledger/pkg/book/memory"
 	"gitlab.com/patchwell/ledger/pkg/test"
 )
 
 func TestGETWalletBalance(t *testing.T) {
 	book := memory.NewMockInMemoryBook()
-	server := NewServer(book)
+	server := api.NewServer(book)
 
 	t.Run("returns the current balance of the wallet '1'", func(t *testing.T) {
 		request := newGetWalletBalanceRequest("1")
@@ -50,7 +51,7 @@ func TestGETWalletBalance(t *testing.T) {
 
 func TestGETWalletTransactions(t *testing.T) {
 	book := memory.NewMockInMemoryBook()
-	server := NewServer(book)
+	server := api.NewServer(book)
 	wantedTransactions := []ledgerpb.Transaction{
 		{Type: ledger.TransactionCredit, Wallet: "2", Amount: 10000, Aggregate: "1112"},
 		{Type: ledger.TransactionDebit, Wallet: "2", Amount: 1000, Aggregate: "1113"},
@@ -76,7 +77,7 @@ func TestGETWalletTransactions(t *testing.T) {
 		}
 
 		test.AssertStatus(t, response.Code, http.StatusOK)
-		test.AssertContentType(t, response, jsonContentType)
+		test.AssertContentType(t, response, api.jsonContentType)
 	})
 	t.Run("returns 404 if wallet has no transactions", func(t *testing.T) {
 		request := newGetWalletTransactionsRequest("99")
@@ -90,7 +91,7 @@ func TestGETWalletTransactions(t *testing.T) {
 
 func TestGETAggregateTransactions(t *testing.T) {
 	book := memory.NewMockInMemoryBook()
-	server := NewServer(book)
+	server := api.NewServer(book)
 	wantedTransactions := []ledgerpb.Transaction{
 		{Type: ledger.TransactionCashIn, Wallet: "1", Amount: 100000, Aggregate: "1111"},
 	}
@@ -110,7 +111,7 @@ func TestGETAggregateTransactions(t *testing.T) {
 		}
 
 		test.AssertStatus(t, response.Code, http.StatusOK)
-		test.AssertContentType(t, response, jsonContentType)
+		test.AssertContentType(t, response, api.jsonContentType)
 	})
 	t.Run("returns 404 if aggregate has no transactions", func(t *testing.T) {
 		request := newGetAggregateTransactionsRequest("9999")
@@ -124,7 +125,7 @@ func TestGETAggregateTransactions(t *testing.T) {
 
 func TestPOSTCreditTransaction(t *testing.T) {
 	book := memory.NewMockInMemoryBook()
-	server := NewServer(book)
+	server := api.NewServer(book)
 
 	t.Run("it should add an additional transaction to the ledger book", func(t *testing.T) {
 		request := newPostCreditTransactionRequest("1", 100, "2222")
@@ -169,7 +170,7 @@ func newGetAggregateTransactionsRequest(aggregate string) *http.Request {
 }
 
 func newPostCreditTransactionRequest(wallet string, credit int32, aggregate string) *http.Request {
-	payload := addCreditTransactionDTO{
+	payload := api.addCreditTransactionDTO{
 		Wallet:    wallet,
 		Credit:    credit,
 		Aggregate: aggregate,

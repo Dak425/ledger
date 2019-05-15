@@ -1,10 +1,10 @@
 package memory
 
 import (
-	"gitlab.com/patchwell/ledger/pkg/test"
 	"testing"
 
 	"gitlab.com/patchwell/ledger"
+	"gitlab.com/patchwell/ledger/pkg/test"
 )
 
 func TestNewInMemoryBook(t *testing.T) {

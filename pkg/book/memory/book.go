@@ -2,6 +2,7 @@ package memory
 
 import (
 	"errors"
+
 	ledgerpb "gitlab.com/patchwell/ledger/gen/api/protobuf"
 
 	"gitlab.com/patchwell/ledger"

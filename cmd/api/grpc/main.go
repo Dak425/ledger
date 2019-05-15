@@ -1,12 +1,13 @@
 package main
 
 import (
-	grpc2 "gitlab.com/patchwell/ledger/pkg/grpc"
-	"gitlab.com/patchwell/ledger/pkg/memory"
 	"log"
 	"net"
 
-	"gitlab.com/patchwell/ledger/gen/api/protobuf"
+	"gitlab.com/patchwell/ledger/pkg/book/memory"
+	ledgerpb "gitlab.com/patchwell/ledger/gen/api/protobuf"
+	ledgergrpc "gitlab.com/patchwell/ledger/pkg/api/server/grpc"
+
 	"google.golang.org/grpc"
 )
 
@@ -18,7 +19,7 @@ func main() {
 
 	s := grpc.NewServer()
 	book := memory.NewInMemoryBook()
-	ledgerpb.RegisterLedgerServiceServer(s, grpc2.NewGRPCServer(book))
+	ledgerpb.RegisterLedgerServiceServer(s, ledgergrpc.NewGRPCServer(book))
 
 	if err := s.Serve(l); err != nil {
 		log.Fatalf("failed to serve, %v", err)
