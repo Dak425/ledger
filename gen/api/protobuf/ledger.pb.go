@@ -776,7 +776,7 @@ func (m *WalletTransactionsResponse) GetTransactions() []*Transaction {
 }
 
 func init() {
-	proto.RegisterType((*Transaction)(nil), "ledgerpb.Transaction")
+	proto.RegisterType((*Transaction)(nil), "ledger.Transaction")
 	proto.RegisterType((*CreditTransaction)(nil), "ledger.CreditTransaction")
 	proto.RegisterType((*AddCreditTransactionRequest)(nil), "ledger.AddCreditTransactionRequest")
 	proto.RegisterType((*AddCreditTransactionResponse)(nil), "ledger.AddCreditTransactionResponse")
