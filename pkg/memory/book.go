@@ -72,6 +72,33 @@ func (b *Book) WalletTransactions(wallet string) ([]*ledgerpb.Transaction, error
 	}
 }
 
+func (b *Book) WalletBalance(wallet string) (int32, error) {
+	ts, err := b.WalletTransactions(wallet)
+
+	if err != nil {
+		return 0, err
+	}
+
+	balance := int32(0)
+
+	for _, t := range ts {
+		switch t.Type {
+		case ledger.TransactionCredit:
+			balance += t.Amount
+		case ledger.TransactionDebit:
+			balance -= t.Amount
+		case ledger.TransactionCashIn:
+			balance += t.Amount
+		case ledger.TransactionCashOut:
+			balance -= t.Amount
+		default:
+			return 0, errors.New("invalid transaction type: " + t.Type)
+		}
+	}
+
+	return balance, nil
+}
+
 func (b *Book) AggregateTransactions(aggregate string) ([]*ledgerpb.Transaction, error) {
 	if t, ok := b.aggregateMap[aggregate]; ok {
 		return t, nil

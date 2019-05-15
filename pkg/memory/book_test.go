@@ -98,6 +98,23 @@ func TestBook_WalletTransactions(t *testing.T) {
 	})
 }
 
+func TestBook_WalletBalance(t *testing.T) {
+	t.Run("returns the current balance of the given wallet", func(t *testing.T) {
+		book := NewMockInMemoryBook()
+
+		wallet := "1"
+		expected := int32(100000)
+
+		balance, err := book.WalletBalance(wallet)
+
+		if err != nil {
+			t.Errorf("error returned, %v", err)
+		}
+
+		test.AssertWalletBalance(t, balance, expected)
+	})
+}
+
 func TestBook_AggregateTransactions(t *testing.T) {
 	t.Run("should return all transactions for a given aggregate ID", func(t *testing.T) {
 		book := NewMockInMemoryBook()
