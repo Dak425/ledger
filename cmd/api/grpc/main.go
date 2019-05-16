@@ -4,9 +4,9 @@ import (
 	"log"
 	"net"
 
-	"gitlab.com/patchwell/ledger/pkg/book/memory"
 	ledgerpb "gitlab.com/patchwell/ledger/gen/api/protobuf"
 	ledgergrpc "gitlab.com/patchwell/ledger/pkg/api/server/grpc"
+	"gitlab.com/patchwell/ledger/pkg/book/memory"
 
 	"google.golang.org/grpc"
 )
