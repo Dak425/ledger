@@ -11,7 +11,16 @@ import (
 )
 
 type Book struct {
-	database io.ReadWriteSeeker
+	database     io.ReadWriteSeeker
+	transactions []ledgerpb.Transaction
+	walletMap    map[string][]*ledgerpb.Transaction
+	aggregateMap map[string][]*ledgerpb.Transaction
+}
+
+func NewFileSystemBook(database io.ReadWriteSeeker) *Book {
+	return &Book{
+		database: database,
+	}
 }
 
 func (b *Book) WalletBalance(wallet string) (int32, error) {

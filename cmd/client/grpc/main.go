@@ -21,7 +21,7 @@ func main() {
 	wr := &ledgerpb.WalletBalanceRequest{
 		Wallet: "1",
 	}
-
+	
 	res, err := c.WalletBalance(context.Background(), wr)
 
 	if err != nil {
