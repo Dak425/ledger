@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"gitlab.com/patchwell/ledger/pkg/api"
 	"io"
 	"net/http"
 	"net/http/httptest"
@@ -19,7 +18,7 @@ import (
 
 func TestGETWalletBalance(t *testing.T) {
 	book := memory.NewMockInMemoryBook()
-	server := api.NewServer(book)
+	server := NewServer(book)
 
 	t.Run("returns the current balance of the wallet '1'", func(t *testing.T) {
 		request := newGetWalletBalanceRequest("1")
@@ -27,8 +26,8 @@ func TestGETWalletBalance(t *testing.T) {
 
 		server.ServeHTTP(response, request)
 
-		test.AssertStatus(t, response.Code, http.StatusOK)
-		test.AssertResponseBody(t, response.Body.String(), "100000")
+		test.AssertResponseStatus(t, response, http.StatusOK)
+		test.AssertResponseBody(t, response, "100000")
 	})
 	t.Run("returns the current balance of wallet '2'", func(t *testing.T) {
 		request := newGetWalletBalanceRequest("2")
@@ -36,8 +35,8 @@ func TestGETWalletBalance(t *testing.T) {
 
 		server.ServeHTTP(response, request)
 
-		test.AssertStatus(t, response.Code, http.StatusOK)
-		test.AssertResponseBody(t, response.Body.String(), "8000")
+		test.AssertResponseStatus(t, response, http.StatusOK)
+		test.AssertResponseBody(t, response, "8000")
 	})
 	t.Run("returns 404 when wallet is not found", func(t *testing.T) {
 		request := newGetWalletBalanceRequest("-99")
@@ -45,13 +44,13 @@ func TestGETWalletBalance(t *testing.T) {
 
 		server.ServeHTTP(response, request)
 
-		test.AssertStatus(t, response.Code, http.StatusNotFound)
+		test.AssertResponseStatus(t, response, http.StatusNotFound)
 	})
 }
 
 func TestGETWalletTransactions(t *testing.T) {
 	book := memory.NewMockInMemoryBook()
-	server := api.NewServer(book)
+	server := NewServer(book)
 	wantedTransactions := []ledgerpb.Transaction{
 		{Type: ledger.TransactionCredit, Wallet: "2", Amount: 10000, Aggregate: "1112"},
 		{Type: ledger.TransactionDebit, Wallet: "2", Amount: 1000, Aggregate: "1113"},
@@ -76,8 +75,8 @@ func TestGETWalletTransactions(t *testing.T) {
 			t.Error("response did not contain the expected transactions")
 		}
 
-		test.AssertStatus(t, response.Code, http.StatusOK)
-		test.AssertContentType(t, response, api.jsonContentType)
+		test.AssertResponseStatus(t, response, http.StatusOK)
+		test.AssertResponseContentType(t, response, jsonContentType)
 	})
 	t.Run("returns 404 if wallet has no transactions", func(t *testing.T) {
 		request := newGetWalletTransactionsRequest("99")
@@ -85,13 +84,13 @@ func TestGETWalletTransactions(t *testing.T) {
 
 		server.ServeHTTP(response, request)
 
-		test.AssertStatus(t, response.Code, http.StatusNotFound)
+		test.AssertResponseStatus(t, response, http.StatusNotFound)
 	})
 }
 
 func TestGETAggregateTransactions(t *testing.T) {
 	book := memory.NewMockInMemoryBook()
-	server := api.NewServer(book)
+	server := NewServer(book)
 	wantedTransactions := []ledgerpb.Transaction{
 		{Type: ledger.TransactionCashIn, Wallet: "1", Amount: 100000, Aggregate: "1111"},
 	}
@@ -110,8 +109,8 @@ func TestGETAggregateTransactions(t *testing.T) {
 			t.Error("response did not contain the expected transactions")
 		}
 
-		test.AssertStatus(t, response.Code, http.StatusOK)
-		test.AssertContentType(t, response, api.jsonContentType)
+		test.AssertResponseStatus(t, response, http.StatusOK)
+		test.AssertResponseContentType(t, response, jsonContentType)
 	})
 	t.Run("returns 404 if aggregate has no transactions", func(t *testing.T) {
 		request := newGetAggregateTransactionsRequest("9999")
@@ -119,13 +118,13 @@ func TestGETAggregateTransactions(t *testing.T) {
 
 		server.ServeHTTP(response, request)
 
-		test.AssertStatus(t, response.Code, http.StatusNotFound)
+		test.AssertResponseStatus(t, response, http.StatusNotFound)
 	})
 }
 
 func TestPOSTCreditTransaction(t *testing.T) {
 	book := memory.NewMockInMemoryBook()
-	server := api.NewServer(book)
+	server := NewServer(book)
 
 	t.Run("it should add an additional transaction to the ledger book", func(t *testing.T) {
 		request := newPostCreditTransactionRequest("1", 100, "2222")
@@ -137,7 +136,7 @@ func TestPOSTCreditTransaction(t *testing.T) {
 
 		got := len(book.Transactions())
 
-		test.AssertStatus(t, response.Code, http.StatusAccepted)
+		test.AssertResponseStatus(t, response, http.StatusAccepted)
 
 		if got != want {
 			t.Errorf("ledger book has invalid transaction count, got %d, wanted %d", got, want)
@@ -147,10 +146,10 @@ func TestPOSTCreditTransaction(t *testing.T) {
 
 		lastTransaction := transactions[len(transactions)-1]
 
-		test.AssertTransactionType(t, lastTransaction.Type, ledger.TransactionCredit)
-		test.AssertTransactionWallet(t, lastTransaction.Wallet, "1")
-		test.AssertTransactionAmount(t, lastTransaction.Amount, 100)
-		test.AssertTransactionAggregate(t, lastTransaction.Aggregate, "2222")
+		test.AssertTransactionType(t, &lastTransaction, ledger.TransactionCredit)
+		test.AssertTransactionWallet(t, &lastTransaction, "1")
+		test.AssertTransactionAmount(t, &lastTransaction, 100)
+		test.AssertTransactionAggregate(t, &lastTransaction, "2222")
 	})
 }
 
@@ -170,7 +169,7 @@ func newGetAggregateTransactionsRequest(aggregate string) *http.Request {
 }
 
 func newPostCreditTransactionRequest(wallet string, credit int32, aggregate string) *http.Request {
-	payload := api.addCreditTransactionDTO{
+	payload := addCreditTransactionDTO{
 		Wallet:    wallet,
 		Credit:    credit,
 		Aggregate: aggregate,

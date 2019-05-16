@@ -1,7 +1,6 @@
 package http
 
 import (
-	"gitlab.com/patchwell/ledger/pkg/api/server/httper/http"
 	"testing"
 
 	"gitlab.com/patchwell/ledger/pkg/book/memory"
@@ -19,7 +18,7 @@ func TestWalletBalance(t *testing.T) {
 		wallet := "1"
 		expected := int32(100000)
 
-		balance, err := http.WalletBalance(book, wallet)
+		balance, err := WalletBalance(book, wallet)
 
 		if err != nil {
 			t.Error("WalletBalance returned error: ", err)
@@ -33,7 +32,7 @@ func TestWalletBalance(t *testing.T) {
 		book := memory.NewMockInMemoryBook()
 		wallet := invalidWallet
 
-		balance, err := http.WalletBalance(book, wallet)
+		balance, err := WalletBalance(book, wallet)
 
 		if balance != 0 {
 			t.Error("balance returned was not a zero balance")
@@ -47,7 +46,7 @@ func TestWalletBalance(t *testing.T) {
 		book := memory.NewMockInMemoryBook()
 		wallet := invalidWalletTransaction
 
-		balance, err := http.WalletBalance(book, wallet)
+		balance, err := WalletBalance(book, wallet)
 
 		if balance != 0 {
 			t.Error("balance returned was not a zero balance")
@@ -64,7 +63,7 @@ func TestWalletTransactions(t *testing.T) {
 		book := memory.NewMockInMemoryBook()
 		wallet := "1"
 
-		transactions, err := http.WalletTransactions(book, wallet)
+		transactions, err := WalletTransactions(book, wallet)
 
 		if err != nil {
 			t.Errorf("returned an err %v", err)
@@ -76,7 +75,7 @@ func TestWalletTransactions(t *testing.T) {
 		book := memory.NewMockInMemoryBook()
 		wallet := invalidWallet
 
-		transactions, err := http.WalletTransactions(book, wallet)
+		transactions, err := WalletTransactions(book, wallet)
 
 		if transactions != nil {
 			t.Error("transactions was not nil")
@@ -93,7 +92,7 @@ func TestAggregateTransactions(t *testing.T) {
 		book := memory.NewMockInMemoryBook()
 		aggregate := "1111"
 
-		transactions, err := http.AggregateTransactions(book, aggregate)
+		transactions, err := AggregateTransactions(book, aggregate)
 
 		if err != nil {
 			t.Errorf("returned an err %v", err)
@@ -105,7 +104,7 @@ func TestAggregateTransactions(t *testing.T) {
 		book := memory.NewMockInMemoryBook()
 		aggregate := invalidAggregate
 
-		transactions, err := http.AggregateTransactions(book, aggregate)
+		transactions, err := AggregateTransactions(book, aggregate)
 
 		if transactions != nil {
 			t.Error("transactions was not nil")

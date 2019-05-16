@@ -29,7 +29,7 @@ func TestBook_WalletTransactions(t *testing.T) {
 			{Type: "debit", Wallet: "1", Amount: 50000, Aggregate: "1112"},
 		}
 
-		test.AssertTransactinCount(t, len(transactions), len(want))
+		test.AssertTransactionCount(t, transactions, len(want))
 	})
 }
 

@@ -1,7 +1,6 @@
 package http
 
 import (
-	"gitlab.com/patchwell/ledger/pkg/api/server/httper/http"
 	"gitlab.com/patchwell/ledger/pkg/book/memory"
 	"testing"
 )
@@ -10,9 +9,9 @@ func TestAddCreditTransaction(t *testing.T) {
 	book := memory.NewMockInMemoryBook()
 	walletID := "4"
 	aggID := "1114"
-	credit := 10000
+	credit := int32(10000)
 
-	event, err := http.AddCreditTransaction(book, walletID, credit, aggID)
+	event, err := AddCreditTransaction(book, walletID, credit, aggID)
 
 	if err != nil {
 		t.Errorf("error returned %v", err)
@@ -35,9 +34,9 @@ func TestAddDebitTransaction(t *testing.T) {
 	book := memory.NewMockInMemoryBook()
 	walletID := "4"
 	aggID := "1114"
-	debit := 10000
+	debit := int32(10000)
 
-	event, err := http.AddDebitTransaction(book, walletID, debit, aggID)
+	event, err := AddDebitTransaction(book, walletID, debit, aggID)
 
 	if err != nil {
 		t.Errorf("error returned %v", err)
@@ -61,9 +60,9 @@ func TestAddCashInTransaction(t *testing.T) {
 		book := memory.NewMockInMemoryBook()
 		wallet := "1"
 		aggregate := "3333"
-		credit := 1000
+		credit := int32(1000)
 
-		event, err := http.AddCashInTransaction(book, wallet, credit, aggregate)
+		event, err := AddCashInTransaction(book, wallet, credit, aggregate)
 
 		if err != nil {
 			t.Errorf("error returned %v", err)
@@ -88,9 +87,9 @@ func TestAddCashOutTransaction(t *testing.T) {
 		book := memory.NewMockInMemoryBook()
 		wallet := "1"
 		aggregate := "3333"
-		debit := 1000
+		debit := int32(1000)
 
-		event, err := http.AddCashOutTransaction(book, wallet, debit, aggregate)
+		event, err := AddCashOutTransaction(book, wallet, debit, aggregate)
 
 		if err != nil {
 			t.Errorf("error returned %v", err)
