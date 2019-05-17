@@ -2,24 +2,24 @@ package ledger
 
 type CreditTransactionAdded struct {
 	Wallet    string `json:"wallet"`
-	Credit    int    `json:"credit"`
+	Credit    int32  `json:"credit"`
 	Aggregate string `json:"aggregate"`
 }
 
 type DebitTransactionAdded struct {
 	Wallet    string `json:"wallet"`
-	Debit     int    `json:"debit"`
+	Debit     int32  `json:"debit"`
 	Aggregate string `json:"aggregate"`
 }
 
 type CashInTransactionAdded struct {
 	Wallet    string `json:"wallet"`
-	Credit    int    `json:"credit"`
+	Credit    int32  `json:"credit"`
 	Aggregate string `json:"aggregate"`
 }
 
 type CashOutTransactionAdded struct {
 	Wallet    string `json:"wallet"`
-	Debit     int    `json:"debit"`
+	Debit     int32  `json:"debit"`
 	Aggregate string `json:"aggregate"`
 }

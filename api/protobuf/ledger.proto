@@ -1,0 +1,101 @@
+syntax = "proto3";
+
+package ledger;
+option go_package="ledgerpb";
+
+message Transaction {
+    string type = 1;
+    string wallet = 2;
+    int32 amount = 3;
+    string aggregate = 4;
+}
+
+message CreditTransaction {
+    string wallet = 1;
+    int32 credit = 2;
+    string aggregate = 3;
+}
+
+message AddCreditTransactionRequest {
+    CreditTransaction transaction = 1;
+}
+
+message AddCreditTransactionResponse {
+    string response = 1;
+}
+
+message DebitTransaction {
+    string wallet = 1;
+    int32 debit = 2;
+    string aggregate = 3;
+}
+
+message AddDebitTransactionRequest {
+    DebitTransaction transaction = 1;
+}
+
+message AddDebitTransactionResponse {
+    string response = 1;
+}
+
+message CashInTransaction {
+    string wallet = 1;
+    int32 credit = 2;
+    string aggregate = 3;
+}
+
+message AddCashInTransactionRequest {
+    CashInTransaction transaction = 1;
+}
+
+message AddCashInTransactionResponse {
+    string response = 1;
+}
+
+message CashOutTransaction {
+    string wallet = 1;
+    int32 debit = 2;
+    string aggregate = 3;
+}
+
+message AddCashOutTransactionRequest {
+    CashOutTransaction transaction = 1;
+}
+
+message AddCashOutTransactionResponse {
+    string response = 1;
+}
+
+message WalletBalanceRequest {
+    string wallet = 1;
+}
+
+message WalletBalanceResponse {
+    int32 balance = 1;
+}
+
+message WalletTransactionsRequest {
+    string wallet = 1;
+}
+
+message WalletTransactionsResponse {
+    repeated Transaction transactions = 1;
+}
+
+message AggregateTransactionsRequest {
+    string aggregate = 1;
+}
+
+message AggregateTransactionsResponse {
+    repeated Transaction transactions = 1;
+}
+
+service LedgerService {
+    rpc AddCreditTransaction(AddCreditTransactionRequest) returns (AddCreditTransactionResponse) {};
+    rpc AddDebitTransaction(AddDebitTransactionRequest) returns (AddDebitTransactionResponse) {};
+    rpc AddCashInTransaction(AddCashInTransactionRequest) returns (AddCashInTransactionResponse) {};
+    rpc AddCashOutTransaction(AddCashOutTransactionRequest) returns (AddCashOutTransactionResponse) {};
+    rpc WalletBalance(WalletBalanceRequest) returns (WalletBalanceResponse) {};
+    rpc WalletTransactions(WalletTransactionsRequest) returns (WalletTransactionsResponse) {};
+    rpc AggregateTransactions(AggregateTransactionsRequest) returns (AggregateTransactionsResponse) {};
+}

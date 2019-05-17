@@ -1,16 +1,15 @@
-package command
+package http
 
 import (
+	"gitlab.com/patchwell/ledger/pkg/book/memory"
 	"testing"
-
-	"gitlab.com/patchwell/ledger/pkg/memory"
 )
 
 func TestAddCreditTransaction(t *testing.T) {
 	book := memory.NewMockInMemoryBook()
 	walletID := "4"
 	aggID := "1114"
-	credit := 10000
+	credit := int32(10000)
 
 	event, err := AddCreditTransaction(book, walletID, credit, aggID)
 
@@ -35,7 +34,7 @@ func TestAddDebitTransaction(t *testing.T) {
 	book := memory.NewMockInMemoryBook()
 	walletID := "4"
 	aggID := "1114"
-	debit := 10000
+	debit := int32(10000)
 
 	event, err := AddDebitTransaction(book, walletID, debit, aggID)
 
@@ -61,7 +60,7 @@ func TestAddCashInTransaction(t *testing.T) {
 		book := memory.NewMockInMemoryBook()
 		wallet := "1"
 		aggregate := "3333"
-		credit := 1000
+		credit := int32(1000)
 
 		event, err := AddCashInTransaction(book, wallet, credit, aggregate)
 
@@ -88,7 +87,7 @@ func TestAddCashOutTransaction(t *testing.T) {
 		book := memory.NewMockInMemoryBook()
 		wallet := "1"
 		aggregate := "3333"
-		debit := 1000
+		debit := int32(1000)
 
 		event, err := AddCashOutTransaction(book, wallet, debit, aggregate)
 

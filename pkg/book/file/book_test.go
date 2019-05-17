@@ -3,7 +3,7 @@ package file
 import (
 	"testing"
 
-	"gitlab.com/patchwell/ledger"
+	ledgerpb "gitlab.com/patchwell/ledger/gen/api/protobuf"
 	"gitlab.com/patchwell/ledger/pkg/test"
 )
 
@@ -11,12 +11,12 @@ func TestBook_WalletTransactions(t *testing.T) {
 	data := `[
 		{"type": "credit", "wallet": "1", "amount": 100000, "aggregate": "1111"},
 		{"type": "debit", "wallet": "1", "amount": 50000, "aggregate": "1112"}]`
-	
+
 	t.Run("should return all transactions for a given wallet ID", func(t *testing.T) {
 		database, clean := test.CreateTempFile(t, data, "db")
 		defer clean()
 
-		book := Book{database}
+		book := NewFileSystemBook(database)
 
 		transactions, err := book.WalletTransactions("1")
 
@@ -24,12 +24,12 @@ func TestBook_WalletTransactions(t *testing.T) {
 			t.Errorf("returned error %v", err)
 		}
 
-		want := []ledger.Transaction{
+		want := []ledgerpb.Transaction{
 			{Type: "credit", Wallet: "1", Amount: 100000, Aggregate: "1111"},
 			{Type: "debit", Wallet: "1", Amount: 50000, Aggregate: "1112"},
 		}
 
-		test.AssertTransactinCount(t, len(transactions), len(want))
+		test.AssertTransactionCount(t, transactions, len(want))
 	})
 }
 
@@ -42,7 +42,7 @@ func TestBook_WalletBalance(t *testing.T) {
 		database, clean := test.CreateTempFile(t, data, "db")
 		defer clean()
 
-		book := Book{database}
+		book := NewFileSystemBook(database)
 
 		balance, err := book.WalletBalance("1")
 
@@ -50,7 +50,7 @@ func TestBook_WalletBalance(t *testing.T) {
 			t.Errorf("returned error, %v", err)
 		}
 
-		want := 50000
+		want := int32(50000)
 
 		test.AssertWalletBalance(t, balance, want)
 	})

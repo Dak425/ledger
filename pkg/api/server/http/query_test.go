@@ -1,9 +1,9 @@
-package query
+package http
 
 import (
 	"testing"
 
-	"gitlab.com/patchwell/ledger/pkg/memory"
+	"gitlab.com/patchwell/ledger/pkg/book/memory"
 )
 
 const (
@@ -16,7 +16,7 @@ func TestWalletBalance(t *testing.T) {
 	t.Run("should return the balance for a given wallet ID", func(t *testing.T) {
 		book := memory.NewMockInMemoryBook()
 		wallet := "1"
-		expected := 100000
+		expected := int32(100000)
 
 		balance, err := WalletBalance(book, wallet)
 

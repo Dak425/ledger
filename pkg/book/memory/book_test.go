@@ -4,6 +4,7 @@ import (
 	"testing"
 
 	"gitlab.com/patchwell/ledger"
+	"gitlab.com/patchwell/ledger/pkg/test"
 )
 
 func TestNewInMemoryBook(t *testing.T) {
@@ -29,7 +30,7 @@ func TestBook_AddTransaction(t *testing.T) {
 	transactionType := ledger.TransactionDebit
 	walletID := "4"
 	aggID := "1115"
-	debit := 10000
+	debit := int32(10000)
 	count := len(book.transactions)
 
 	book.AddTransaction(transactionType, walletID, debit, aggID)
@@ -42,13 +43,8 @@ func TestBook_AddTransaction(t *testing.T) {
 
 	transaction := book.transactions[len(book.transactions)-1]
 
-	if *book.walletMap[walletID][0] != transaction {
-		t.Error("log book wallet transaction map should contain the new transaction")
-	}
-
-	if *book.aggregateMap[aggID][0] != transaction {
-		t.Error("log book aggregate transaction map should container the new transaction")
-	}
+	test.AssertTransaction(t, *book.walletMap[walletID][0], transaction)
+	test.AssertTransaction(t, *book.aggregateMap[aggID][0], transaction)
 
 	if transaction.Type != transactionType {
 		t.Errorf("new transaction has type of %s, should be %s", transaction.Type, transactionType)
@@ -99,6 +95,23 @@ func TestBook_WalletTransactions(t *testing.T) {
 		if err == nil {
 			t.Error("no error returned")
 		}
+	})
+}
+
+func TestBook_WalletBalance(t *testing.T) {
+	t.Run("returns the current balance of the given wallet", func(t *testing.T) {
+		book := NewMockInMemoryBook()
+
+		wallet := "1"
+		expected := int32(100000)
+
+		balance, err := book.WalletBalance(wallet)
+
+		if err != nil {
+			t.Errorf("error returned, %v", err)
+		}
+
+		test.AssertWalletBalance(t, balance, expected)
 	})
 }
 
