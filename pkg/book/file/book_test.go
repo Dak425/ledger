@@ -16,7 +16,7 @@ func TestBook_WalletTransactions(t *testing.T) {
 		database, clean := test.CreateTempFile(t, data, "db")
 		defer clean()
 
-		book := Book{database}
+		book := NewFileSystemBook(database)
 
 		transactions, err := book.WalletTransactions("1")
 
@@ -42,7 +42,7 @@ func TestBook_WalletBalance(t *testing.T) {
 		database, clean := test.CreateTempFile(t, data, "db")
 		defer clean()
 
-		book := Book{database}
+		book := NewFileSystemBook(database)
 
 		balance, err := book.WalletBalance("1")
 
