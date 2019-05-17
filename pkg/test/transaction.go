@@ -21,6 +21,13 @@ func AssertTransactions(t *testing.T, transactions, want []ledgerpb.Transaction)
 	}
 }
 
+func AssertTransactionPointers(t *testing.T, transactions, want []*ledgerpb.Transaction) {
+	t.Helper()
+	if !reflect.DeepEqual(transactions, want) {
+		t.Errorf("transaction slices are different, got '%v', wanted '%v'", transactions, want)
+	}
+}
+
 func AssertTransactionType(t *testing.T, transaction *ledgerpb.Transaction, want string) {
 	t.Helper()
 	tt := transaction.GetType()

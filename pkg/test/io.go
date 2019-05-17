@@ -1,13 +1,12 @@
 package test
 
 import (
-	"io"
 	"io/ioutil"
 	"os"
 	"testing"
 )
 
-func CreateTempFile(t *testing.T, data string, name string) (io.ReadWriteSeeker, func()) {
+func CreateTempFile(t *testing.T, data string, name string) (*os.File, func()) {
 	t.Helper()
 
 	file, err := ioutil.TempFile("", name)
@@ -15,7 +14,9 @@ func CreateTempFile(t *testing.T, data string, name string) (io.ReadWriteSeeker,
 		t.Fatalf("unable to create temp file %v", err)
 	}
 
-	file.Write([]byte(data))
+	if data != "" {
+		file.Write([]byte(data))
+	}
 
 	cleanUp := func() {
 		os.Remove(file.Name())
