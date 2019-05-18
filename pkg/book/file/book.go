@@ -43,7 +43,7 @@ func NewFileSystemBook(file *os.File) (*Book, error) {
 	}
 
 	b := &Book{
-		database:     json.NewEncoder(file),
+		database:     json.NewEncoder(&tape{file}),
 		transactions: []ledgerpb.Transaction{},
 		walletMap:    make(map[string][]*ledgerpb.Transaction),
 		aggregateMap: make(map[string][]*ledgerpb.Transaction),
@@ -66,15 +66,11 @@ func (b *Book) AddTransaction(transactionType string, wallet string, amount int3
 		Aggregate: aggregate,
 	}
 
-	err := b.writeToDatabase(&t)
-
-	if err != nil {
-		return fmt.Errorf("problem adding transaction, %v", err)
-	}
-
 	b.transactions = append(b.transactions, t)
 	b.addWalletMapEntry(t)
 	b.addAggregateMapEntry(t)
+
+	b.database.Encode(b.transactions)
 
 	return nil
 }
@@ -159,14 +155,4 @@ func (b *Book) addAggregateMapEntry(transaction ledgerpb.Transaction) {
 
 	// append transaction pointer to aggregate's slice of transactions
 	b.aggregateMap[transaction.GetAggregate()] = append(b.aggregateMap[transaction.GetAggregate()], &transaction)
-}
-
-func (b *Book) writeToDatabase(transaction *ledgerpb.Transaction) error {
-	err := b.database.Encode(transaction)
-
-	if err != nil {
-		return fmt.Errorf("problem when writing transaction to file, %v", err)
-	}
-
-	return nil
 }

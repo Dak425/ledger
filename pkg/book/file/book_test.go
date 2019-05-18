@@ -9,9 +9,7 @@ import (
 )
 
 func TestBook_AddTransaction(t *testing.T) {
-	data := `[
-		{"type": "credit", "wallet": "1", "amount": 100000, "aggregate": "1111"},
-		{"type": "debit", "wallet": "1", "amount": 50000, "aggregate": "1112"}]`
+	data := `[]`
 
 	t.Run("should add new transaction to slice and write to file", func(t *testing.T) {
 		database, clean := test.CreateTempFile(t, data, "db.json")
@@ -32,11 +30,9 @@ func TestBook_AddTransaction(t *testing.T) {
 			t.Errorf("error when reloading file, %v", err)
 		}
 
-		transactions := newBook.Transactions()
+		transactions := newBook.transactions
 
 		want := []ledgerpb.Transaction{
-			{Type: "credit", Wallet: "1", Amount: 100000, Aggregate: "1111"},
-			{Type: "debit", Wallet: "1", Amount: 50000, Aggregate: "1112"},
 			{Type: "credit", Wallet: "2", Amount: 50000, Aggregate: "1112"},
 		}
 
