@@ -1,11 +1,12 @@
 package memory
 
 import (
+	"crypto/rand"
 	"errors"
-
-	ledgerpb "gitlab.com/patchwell/ledger/gen/api/protobuf"
+	"fmt"
 
 	"gitlab.com/patchwell/ledger"
+	ledgerpb "gitlab.com/patchwell/ledger/gen/api/protobuf"
 )
 
 // Book represents a collection of transactions showing credit/debit actions against a given wallet
@@ -52,6 +53,31 @@ func NewMockInMemoryBook() *Book {
 	return l
 }
 
+func (b *Book) TransferWalletFunds(source string, destination string, amount int32) (string, error) {
+	balance, err := b.WalletBalance(source)
+	if err != nil {
+		return "", fmt.Errorf("problem when transferring wallet funds: %v", err)
+	}
+
+	if balance < amount {
+		return "", fmt.Errorf("wallet '%s' has insufficient balance of %d to fill transfer of %d", source, balance, amount)
+	}
+
+	aggregate, err := genUUID()
+	if err != nil {
+		return "", fmt.Errorf("problem when transferring wallet funds: %v", err)
+	}
+
+	ts := []ledgerpb.Transaction{
+		{Type: ledger.TransactionDebit, Wallet: source, Amount: amount, Aggregate: aggregate},
+		{Type: ledger.TransactionCredit, Wallet: destination, Amount: amount, Aggregate: aggregate},
+	}
+
+	b.addTransactions(ts)
+
+	return aggregate, nil
+}
+
 func (b *Book) AddTransaction(transactionType string, wallet string, amount int32, aggregate string) error {
 	// Create transaction
 	t := ledgerpb.Transaction{Type: transactionType, Wallet: wallet, Amount: amount, Aggregate: aggregate}
@@ -59,8 +85,7 @@ func (b *Book) AddTransaction(transactionType string, wallet string, amount int3
 	// Append to master slice of transactions
 	b.transactions = append(b.transactions, t)
 
-	b.addWalletMapEntry(t)
-	b.addAggregateMapEntry(t)
+	b.addMapEntries(t)
 
 	return nil
 }
@@ -130,4 +155,27 @@ func (b *Book) addAggregateMapEntry(transaction ledgerpb.Transaction) {
 
 	// append transaction pointer to aggregate's slice of transactions
 	b.aggregateMap[transaction.Aggregate] = append(b.aggregateMap[transaction.Aggregate], &transaction)
+}
+
+func (b *Book) addMapEntries(transaction ledgerpb.Transaction) {
+	b.addWalletMapEntry(transaction)
+	b.addAggregateMapEntry(transaction)
+}
+
+func (b *Book) addTransactions(transactions []ledgerpb.Transaction) {
+	b.transactions = append(b.transactions, transactions...)
+
+	for _, t := range transactions {
+		b.addMapEntries(t)
+	}
+}
+
+func genUUID() (string, error) {
+	b := make([]byte, 16)
+	_, err := rand.Read(b)
+	if err != nil {
+		return "", fmt.Errorf("error when generating uuid: %v", err)
+	}
+
+	return fmt.Sprintf("%X-%X-%X-%X-%X", b[0:4], b[4:6], b[6:8], b[8:10], b[10:]), nil
 }
