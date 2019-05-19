@@ -2,6 +2,8 @@ package grpc
 
 import (
 	"context"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 
 	"gitlab.com/patchwell/ledger"
 	ledgerpb "gitlab.com/patchwell/ledger/gen/api/protobuf"
@@ -18,11 +20,15 @@ func NewGRPCServer(book ledger.Book) *Server {
 }
 
 func (s *Server) AddCreditTransaction(ctx context.Context, req *ledgerpb.AddCreditTransactionRequest) (*ledgerpb.AddCreditTransactionResponse, error) {
+	if ctx.Err() == context.Canceled {
+		return nil, status.Error(codes.Canceled, "client cancelled, aborting")
+	}
+
 	t := req.GetTransaction()
 	err := s.book.AddTransaction(ledger.TransactionCredit, t.GetWallet(), t.GetCredit(), t.GetAggregate())
 
 	if err != nil {
-		return nil, err
+		return nil, status.Errorf(codes.FailedPrecondition, "problem when adding credit transaction: %v", err)
 	}
 
 	return &ledgerpb.AddCreditTransactionResponse{
@@ -31,11 +37,15 @@ func (s *Server) AddCreditTransaction(ctx context.Context, req *ledgerpb.AddCred
 }
 
 func (s *Server) AddDebitTransaction(ctx context.Context, req *ledgerpb.AddDebitTransactionRequest) (*ledgerpb.AddDebitTransactionResponse, error) {
+	if ctx.Err() == context.Canceled {
+		return nil, status.Error(codes.Canceled, "client cancelled, aborting")
+	}
+
 	t := req.GetTransaction()
 	err := s.book.AddTransaction(ledger.TransactionDebit, t.GetWallet(), t.GetDebit(), t.GetAggregate())
 
 	if err != nil {
-		return nil, err
+		return nil, status.Errorf(codes.FailedPrecondition, "problem when adding debit transaction: %v", err)
 	}
 
 	return &ledgerpb.AddDebitTransactionResponse{
@@ -44,11 +54,15 @@ func (s *Server) AddDebitTransaction(ctx context.Context, req *ledgerpb.AddDebit
 }
 
 func (s *Server) AddCashInTransaction(ctx context.Context, req *ledgerpb.AddCashInTransactionRequest) (*ledgerpb.AddCashInTransactionResponse, error) {
+	if ctx.Err() == context.Canceled {
+		return nil, status.Error(codes.Canceled, "client cancelled, aborting")
+	}
+
 	t := req.GetTransaction()
 	err := s.book.AddTransaction(ledger.TransactionCashIn, t.GetWallet(), t.GetCredit(), t.GetAggregate())
 
 	if err != nil {
-		return nil, err
+		return nil, status.Errorf(codes.FailedPrecondition, "problem when adding cash-in transaction: %v", err)
 	}
 
 	return &ledgerpb.AddCashInTransactionResponse{
@@ -57,11 +71,15 @@ func (s *Server) AddCashInTransaction(ctx context.Context, req *ledgerpb.AddCash
 }
 
 func (s *Server) AddCashOutTransaction(ctx context.Context, req *ledgerpb.AddCashOutTransactionRequest) (*ledgerpb.AddCashOutTransactionResponse, error) {
+	if ctx.Err() == context.Canceled {
+		return nil, status.Error(codes.Canceled, "client cancelled, aborting")
+	}
+
 	t := req.GetTransaction()
 	err := s.book.AddTransaction(ledger.TransactionCashOut, t.GetWallet(), t.GetDebit(), t.GetAggregate())
 
 	if err != nil {
-		return nil, err
+		return nil, status.Errorf(codes.FailedPrecondition, "problem when adding cash-out transaction: %v", err)
 	}
 
 	return &ledgerpb.AddCashOutTransactionResponse{
@@ -70,28 +88,34 @@ func (s *Server) AddCashOutTransaction(ctx context.Context, req *ledgerpb.AddCas
 }
 
 func (s *Server) WalletTransactions(ctx context.Context, req *ledgerpb.WalletTransactionsRequest) (*ledgerpb.WalletTransactionsResponse, error) {
-	w := req.GetWallet()
-
-	t, err := s.book.WalletTransactions(w)
-
-	if err != nil {
-		return nil, err
+	if ctx.Err() == context.Canceled {
+		return nil, status.Error(codes.Canceled, "client cancelled, aborting")
 	}
 
-	transactions := toProtoTransaction(t)
+	w := req.GetWallet()
+
+	ts, err := s.book.WalletTransactions(w)
+
+	if err != nil {
+		return nil, status.Errorf(codes.NotFound, "wallet '%s' has no recorded transactions", w)
+	}
 
 	return &ledgerpb.WalletTransactionsResponse{
-		Transactions: transactions,
+		Transactions: ts,
 	}, nil
 }
 
 func (s *Server) WalletBalance(ctx context.Context, req *ledgerpb.WalletBalanceRequest) (*ledgerpb.WalletBalanceResponse, error) {
+	if ctx.Err() == context.Canceled {
+		return nil, status.Error(codes.Canceled, "client cancelled, aborting")
+	}
+
 	w := req.GetWallet()
 
 	b, err := s.book.WalletBalance(w)
 
 	if err != nil {
-		return nil, err
+		return nil, status.Errorf(codes.NotFound, "wallet '%s' has no recorded transactions", w)
 	}
 
 	return &ledgerpb.WalletBalanceResponse{
@@ -100,28 +124,17 @@ func (s *Server) WalletBalance(ctx context.Context, req *ledgerpb.WalletBalanceR
 }
 
 func (s *Server) AggregateTransactions(ctx context.Context, req *ledgerpb.AggregateTransactionsRequest) (*ledgerpb.AggregateTransactionsResponse, error) {
+	if ctx.Err() == context.Canceled {
+		return nil, status.Error(codes.Canceled, "client cancelled, aborting")
+	}
+
 	ts, err := s.book.AggregateTransactions(req.GetAggregate())
 
 	if err != nil {
-		return nil, err
+		return nil, status.Errorf(codes.NotFound, "no transactions found with aggregate ID '%s'", req.GetAggregate())
 	}
 
 	return &ledgerpb.AggregateTransactionsResponse{
 		Transactions: ts,
 	}, nil
-}
-
-func toProtoTransaction(transactions []*ledgerpb.Transaction) []*ledgerpb.Transaction {
-	t := make([]*ledgerpb.Transaction, len(transactions))
-
-	for i, v := range transactions {
-		t[i] = &ledgerpb.Transaction{
-			Type:      v.Type,
-			Wallet:    v.Wallet,
-			Amount:    v.Amount,
-			Aggregate: v.Aggregate,
-		}
-	}
-
-	return t
 }
