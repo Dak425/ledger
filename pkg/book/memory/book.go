@@ -78,6 +78,14 @@ func (b *Book) TransferWalletFunds(source string, destination string, amount int
 	return aggregate, nil
 }
 
+func (b *Book) DepositWalletFunds(wallet string, deposit int32) (string, error) {
+	return "", nil
+}
+
+func (b *Book) WithdrawWalletFunds(wallet string, withdraw int32) (string, error) {
+	return "", nil
+}
+
 func (b *Book) AddTransaction(transactionType string, wallet string, amount int32, aggregate string) error {
 	// Create transaction
 	t := ledgerpb.Transaction{Type: transactionType, Wallet: wallet, Amount: amount, Aggregate: aggregate}
