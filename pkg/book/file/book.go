@@ -35,6 +35,18 @@ type Book struct {
 	aggregateMap map[string][]*ledgerpb.Transaction
 }
 
+func (b *Book) TransferWalletFunds(source string, destination string, amount int32) (string, error) {
+	panic("implement me")
+}
+
+func (b *Book) DepositWalletFunds(wallet string, deposit int32) (string, error) {
+	panic("implement me")
+}
+
+func (b *Book) WithdrawWalletFunds(wallet string, withdraw int32) (string, error) {
+	panic("implement me")
+}
+
 func NewFileSystemBook(file *os.File) (*Book, error) {
 	err := initializeFile(file)
 
