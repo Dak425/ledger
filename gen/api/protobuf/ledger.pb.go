@@ -853,6 +853,272 @@ func (m *AggregateTransactionsResponse) GetTransactions() []*Transaction {
 	return nil
 }
 
+type TransferWalletFundsRequest struct {
+	Source               string   `protobuf:"bytes,1,opt,name=source,proto3" json:"source,omitempty"`
+	Destination          string   `protobuf:"bytes,2,opt,name=destination,proto3" json:"destination,omitempty"`
+	Amount               int32    `protobuf:"varint,3,opt,name=amount,proto3" json:"amount,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *TransferWalletFundsRequest) Reset()         { *m = TransferWalletFundsRequest{} }
+func (m *TransferWalletFundsRequest) String() string { return proto.CompactTextString(m) }
+func (*TransferWalletFundsRequest) ProtoMessage()    {}
+func (*TransferWalletFundsRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_42f128396e519916, []int{19}
+}
+
+func (m *TransferWalletFundsRequest) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_TransferWalletFundsRequest.Unmarshal(m, b)
+}
+func (m *TransferWalletFundsRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_TransferWalletFundsRequest.Marshal(b, m, deterministic)
+}
+func (m *TransferWalletFundsRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_TransferWalletFundsRequest.Merge(m, src)
+}
+func (m *TransferWalletFundsRequest) XXX_Size() int {
+	return xxx_messageInfo_TransferWalletFundsRequest.Size(m)
+}
+func (m *TransferWalletFundsRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_TransferWalletFundsRequest.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_TransferWalletFundsRequest proto.InternalMessageInfo
+
+func (m *TransferWalletFundsRequest) GetSource() string {
+	if m != nil {
+		return m.Source
+	}
+	return ""
+}
+
+func (m *TransferWalletFundsRequest) GetDestination() string {
+	if m != nil {
+		return m.Destination
+	}
+	return ""
+}
+
+func (m *TransferWalletFundsRequest) GetAmount() int32 {
+	if m != nil {
+		return m.Amount
+	}
+	return 0
+}
+
+type TransferWalletFundsResponse struct {
+	Result               string   `protobuf:"bytes,1,opt,name=result,proto3" json:"result,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *TransferWalletFundsResponse) Reset()         { *m = TransferWalletFundsResponse{} }
+func (m *TransferWalletFundsResponse) String() string { return proto.CompactTextString(m) }
+func (*TransferWalletFundsResponse) ProtoMessage()    {}
+func (*TransferWalletFundsResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_42f128396e519916, []int{20}
+}
+
+func (m *TransferWalletFundsResponse) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_TransferWalletFundsResponse.Unmarshal(m, b)
+}
+func (m *TransferWalletFundsResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_TransferWalletFundsResponse.Marshal(b, m, deterministic)
+}
+func (m *TransferWalletFundsResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_TransferWalletFundsResponse.Merge(m, src)
+}
+func (m *TransferWalletFundsResponse) XXX_Size() int {
+	return xxx_messageInfo_TransferWalletFundsResponse.Size(m)
+}
+func (m *TransferWalletFundsResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_TransferWalletFundsResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_TransferWalletFundsResponse proto.InternalMessageInfo
+
+func (m *TransferWalletFundsResponse) GetResult() string {
+	if m != nil {
+		return m.Result
+	}
+	return ""
+}
+
+type DepositWalletFundsRequest struct {
+	Wallet               string   `protobuf:"bytes,1,opt,name=wallet,proto3" json:"wallet,omitempty"`
+	Deposit              int32    `protobuf:"varint,2,opt,name=deposit,proto3" json:"deposit,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *DepositWalletFundsRequest) Reset()         { *m = DepositWalletFundsRequest{} }
+func (m *DepositWalletFundsRequest) String() string { return proto.CompactTextString(m) }
+func (*DepositWalletFundsRequest) ProtoMessage()    {}
+func (*DepositWalletFundsRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_42f128396e519916, []int{21}
+}
+
+func (m *DepositWalletFundsRequest) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_DepositWalletFundsRequest.Unmarshal(m, b)
+}
+func (m *DepositWalletFundsRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_DepositWalletFundsRequest.Marshal(b, m, deterministic)
+}
+func (m *DepositWalletFundsRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_DepositWalletFundsRequest.Merge(m, src)
+}
+func (m *DepositWalletFundsRequest) XXX_Size() int {
+	return xxx_messageInfo_DepositWalletFundsRequest.Size(m)
+}
+func (m *DepositWalletFundsRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_DepositWalletFundsRequest.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_DepositWalletFundsRequest proto.InternalMessageInfo
+
+func (m *DepositWalletFundsRequest) GetWallet() string {
+	if m != nil {
+		return m.Wallet
+	}
+	return ""
+}
+
+func (m *DepositWalletFundsRequest) GetDeposit() int32 {
+	if m != nil {
+		return m.Deposit
+	}
+	return 0
+}
+
+type DepositWalletFundsResponse struct {
+	Result               string   `protobuf:"bytes,1,opt,name=result,proto3" json:"result,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *DepositWalletFundsResponse) Reset()         { *m = DepositWalletFundsResponse{} }
+func (m *DepositWalletFundsResponse) String() string { return proto.CompactTextString(m) }
+func (*DepositWalletFundsResponse) ProtoMessage()    {}
+func (*DepositWalletFundsResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_42f128396e519916, []int{22}
+}
+
+func (m *DepositWalletFundsResponse) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_DepositWalletFundsResponse.Unmarshal(m, b)
+}
+func (m *DepositWalletFundsResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_DepositWalletFundsResponse.Marshal(b, m, deterministic)
+}
+func (m *DepositWalletFundsResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_DepositWalletFundsResponse.Merge(m, src)
+}
+func (m *DepositWalletFundsResponse) XXX_Size() int {
+	return xxx_messageInfo_DepositWalletFundsResponse.Size(m)
+}
+func (m *DepositWalletFundsResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_DepositWalletFundsResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_DepositWalletFundsResponse proto.InternalMessageInfo
+
+func (m *DepositWalletFundsResponse) GetResult() string {
+	if m != nil {
+		return m.Result
+	}
+	return ""
+}
+
+type WithdrawWalletFundsRequest struct {
+	Wallet               string   `protobuf:"bytes,1,opt,name=wallet,proto3" json:"wallet,omitempty"`
+	Withdraw             int32    `protobuf:"varint,2,opt,name=withdraw,proto3" json:"withdraw,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *WithdrawWalletFundsRequest) Reset()         { *m = WithdrawWalletFundsRequest{} }
+func (m *WithdrawWalletFundsRequest) String() string { return proto.CompactTextString(m) }
+func (*WithdrawWalletFundsRequest) ProtoMessage()    {}
+func (*WithdrawWalletFundsRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_42f128396e519916, []int{23}
+}
+
+func (m *WithdrawWalletFundsRequest) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_WithdrawWalletFundsRequest.Unmarshal(m, b)
+}
+func (m *WithdrawWalletFundsRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_WithdrawWalletFundsRequest.Marshal(b, m, deterministic)
+}
+func (m *WithdrawWalletFundsRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_WithdrawWalletFundsRequest.Merge(m, src)
+}
+func (m *WithdrawWalletFundsRequest) XXX_Size() int {
+	return xxx_messageInfo_WithdrawWalletFundsRequest.Size(m)
+}
+func (m *WithdrawWalletFundsRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_WithdrawWalletFundsRequest.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_WithdrawWalletFundsRequest proto.InternalMessageInfo
+
+func (m *WithdrawWalletFundsRequest) GetWallet() string {
+	if m != nil {
+		return m.Wallet
+	}
+	return ""
+}
+
+func (m *WithdrawWalletFundsRequest) GetWithdraw() int32 {
+	if m != nil {
+		return m.Withdraw
+	}
+	return 0
+}
+
+type WithdrawWalletFundsResponse struct {
+	Result               string   `protobuf:"bytes,1,opt,name=result,proto3" json:"result,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *WithdrawWalletFundsResponse) Reset()         { *m = WithdrawWalletFundsResponse{} }
+func (m *WithdrawWalletFundsResponse) String() string { return proto.CompactTextString(m) }
+func (*WithdrawWalletFundsResponse) ProtoMessage()    {}
+func (*WithdrawWalletFundsResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_42f128396e519916, []int{24}
+}
+
+func (m *WithdrawWalletFundsResponse) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_WithdrawWalletFundsResponse.Unmarshal(m, b)
+}
+func (m *WithdrawWalletFundsResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_WithdrawWalletFundsResponse.Marshal(b, m, deterministic)
+}
+func (m *WithdrawWalletFundsResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_WithdrawWalletFundsResponse.Merge(m, src)
+}
+func (m *WithdrawWalletFundsResponse) XXX_Size() int {
+	return xxx_messageInfo_WithdrawWalletFundsResponse.Size(m)
+}
+func (m *WithdrawWalletFundsResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_WithdrawWalletFundsResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_WithdrawWalletFundsResponse proto.InternalMessageInfo
+
+func (m *WithdrawWalletFundsResponse) GetResult() string {
+	if m != nil {
+		return m.Result
+	}
+	return ""
+}
+
 func init() {
 	proto.RegisterType((*Transaction)(nil), "ledger.Transaction")
 	proto.RegisterType((*CreditTransaction)(nil), "ledger.CreditTransaction")
@@ -873,48 +1139,64 @@ func init() {
 	proto.RegisterType((*WalletTransactionsResponse)(nil), "ledger.WalletTransactionsResponse")
 	proto.RegisterType((*AggregateTransactionsRequest)(nil), "ledger.AggregateTransactionsRequest")
 	proto.RegisterType((*AggregateTransactionsResponse)(nil), "ledger.AggregateTransactionsResponse")
+	proto.RegisterType((*TransferWalletFundsRequest)(nil), "ledger.TransferWalletFundsRequest")
+	proto.RegisterType((*TransferWalletFundsResponse)(nil), "ledger.TransferWalletFundsResponse")
+	proto.RegisterType((*DepositWalletFundsRequest)(nil), "ledger.DepositWalletFundsRequest")
+	proto.RegisterType((*DepositWalletFundsResponse)(nil), "ledger.DepositWalletFundsResponse")
+	proto.RegisterType((*WithdrawWalletFundsRequest)(nil), "ledger.WithdrawWalletFundsRequest")
+	proto.RegisterType((*WithdrawWalletFundsResponse)(nil), "ledger.WithdrawWalletFundsResponse")
 }
 
 func init() { proto.RegisterFile("api/protobuf/ledger.proto", fileDescriptor_42f128396e519916) }
 
 var fileDescriptor_42f128396e519916 = []byte{
-	// 567 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xb4, 0x56, 0x51, 0x6f, 0xd3, 0x30,
-	0x10, 0x6e, 0xe8, 0x52, 0xb6, 0x2b, 0x93, 0xc0, 0xeb, 0x50, 0x1a, 0x5a, 0xa9, 0x78, 0x20, 0xf5,
-	0xa9, 0x13, 0xdd, 0x03, 0x62, 0xdb, 0x4b, 0x07, 0x2f, 0x48, 0x08, 0xa4, 0x00, 0x02, 0x4d, 0x80,
-	0xe6, 0x24, 0x5e, 0xa9, 0x54, 0x92, 0x90, 0xa4, 0x20, 0xfe, 0x1a, 0xbf, 0x0e, 0xd5, 0x71, 0x52,
-	0x3b, 0x76, 0xd2, 0x48, 0xa8, 0x6f, 0x39, 0xf7, 0xfb, 0xee, 0xf3, 0x77, 0xe7, 0x3b, 0x15, 0xfa,
-	0x24, 0x5a, 0x9c, 0x46, 0x71, 0x98, 0x86, 0xee, 0xea, 0xf6, 0x74, 0x49, 0xfd, 0x39, 0x8d, 0x27,
-	0x2c, 0x46, 0x9d, 0x2c, 0xc2, 0x21, 0x74, 0x3f, 0xc4, 0x24, 0x48, 0x88, 0x97, 0x2e, 0xc2, 0x00,
-	0x21, 0xd8, 0x4b, 0xff, 0x44, 0xd4, 0x32, 0x46, 0xc6, 0xf8, 0xc0, 0x61, 0xdf, 0xe8, 0x21, 0x74,
-	0x7e, 0x93, 0xe5, 0x92, 0xa6, 0xd6, 0x1d, 0x76, 0xca, 0xa3, 0xf5, 0x39, 0xf9, 0x11, 0xae, 0x82,
-	0xd4, 0x6a, 0x8f, 0x8c, 0xb1, 0xe9, 0xf0, 0x08, 0x0d, 0xe0, 0x80, 0xcc, 0xe7, 0x31, 0x9d, 0x93,
-	0x94, 0x5a, 0x7b, 0x8c, 0xb2, 0x39, 0xc0, 0x04, 0x1e, 0xbc, 0x8c, 0xa9, 0xbf, 0x48, 0x45, 0xd9,
-	0x8d, 0x84, 0x51, 0x96, 0xf0, 0x18, 0x98, 0x49, 0x9b, 0x0e, 0x8f, 0x64, 0x89, 0x76, 0x59, 0xe2,
-	0x1a, 0x1e, 0xcd, 0x7c, 0x5f, 0x51, 0x71, 0xe8, 0xcf, 0x15, 0x4d, 0x52, 0x74, 0x01, 0xdd, 0x74,
-	0x73, 0xca, 0x14, 0xbb, 0xd3, 0xfe, 0x84, 0x97, 0x47, 0xa5, 0x89, 0x68, 0x7c, 0x0e, 0x03, 0x7d,
-	0xee, 0x24, 0x0a, 0x83, 0x84, 0x22, 0x1b, 0xf6, 0x63, 0xfe, 0xcd, 0xbd, 0x14, 0x31, 0xfe, 0x06,
-	0xf7, 0x5f, 0x51, 0xb7, 0x99, 0xf3, 0x1e, 0x98, 0xfe, 0x1a, 0xcb, 0x8d, 0x67, 0xc1, 0x16, 0xdf,
-	0x9f, 0xc1, 0x9e, 0xf9, 0x7e, 0x59, 0x22, 0xb7, 0x7d, 0xae, 0xb3, 0x6d, 0xe5, 0xb6, 0x15, 0x96,
-	0xe4, 0xfa, 0x05, 0xab, 0xa8, 0x9a, 0xb9, 0x81, 0xe9, 0x75, 0xbf, 0x49, 0xf2, 0xfd, 0x75, 0xb0,
-	0xf3, 0x7e, 0x97, 0x55, 0x1a, 0xf6, 0x5b, 0xa1, 0xe9, 0xfa, 0xad, 0xe6, 0x6e, 0x60, 0xfd, 0x06,
-	0xd0, 0x9a, 0xf8, 0x6e, 0xb5, 0xb3, 0x8e, 0x7f, 0x29, 0x6e, 0x27, 0x8b, 0xe4, 0xd6, 0x2f, 0x75,
-	0xd6, 0x6d, 0xd1, 0x7a, 0x89, 0x27, 0x79, 0xbf, 0x80, 0x61, 0x45, 0xf6, 0x06, 0xe6, 0x27, 0xd0,
-	0xfb, 0xc4, 0x8c, 0x5d, 0x91, 0x25, 0x09, 0x3c, 0x9a, 0x5f, 0xa9, 0xc2, 0x3e, 0x7e, 0x06, 0xc7,
-	0x25, 0x3c, 0x17, 0xb1, 0xe0, 0xae, 0x9b, 0x1d, 0x31, 0x86, 0xe9, 0xe4, 0x21, 0x3e, 0x83, 0x7e,
-	0x46, 0x11, 0xee, 0x96, 0x6c, 0xd3, 0xf9, 0x08, 0xb6, 0x8e, 0xc4, 0xc5, 0x9e, 0xc3, 0x3d, 0xa1,
-	0x02, 0x89, 0x65, 0x8c, 0xda, 0xe3, 0xee, 0xf4, 0x28, 0xaf, 0x98, 0x58, 0x04, 0x09, 0x88, 0x2f,
-	0x61, 0x30, 0xcb, 0xdb, 0xa2, 0xbb, 0x8e, 0xd4, 0x47, 0x43, 0x9d, 0xdc, 0x61, 0x05, 0xfb, 0x3f,
-	0xef, 0x35, 0xfd, 0x6b, 0xc2, 0xe1, 0x1b, 0x06, 0x7a, 0x4f, 0xe3, 0x5f, 0x0b, 0x8f, 0x22, 0x0f,
-	0x7a, 0xba, 0x0d, 0x86, 0x4e, 0xf2, 0x64, 0x35, 0xbb, 0xd3, 0x7e, 0x52, 0x0f, 0xe2, 0xbd, 0x6f,
-	0xa1, 0x1b, 0x38, 0xd2, 0x2c, 0x0c, 0x84, 0x05, 0x7a, 0xc5, 0x9e, 0xb2, 0x4f, 0x6a, 0x31, 0x85,
-	0x02, 0xb7, 0xa1, 0xac, 0x16, 0xc9, 0x46, 0xc5, 0x4a, 0x90, 0x6d, 0x54, 0xcd, 0x36, 0x6e, 0xa1,
-	0x5b, 0x38, 0xd6, 0x4e, 0x00, 0x2a, 0x27, 0xd0, 0x8e, 0x9f, 0xfd, 0x74, 0x0b, 0xaa, 0xd0, 0x79,
-	0x0b, 0x87, 0xd2, 0xe3, 0x47, 0x83, 0x9c, 0xa9, 0x9b, 0x21, 0x7b, 0x58, 0xf1, 0x6b, 0x91, 0xef,
-	0x2b, 0x20, 0xf5, 0x91, 0xa3, 0xc7, 0x32, 0x4d, 0xf3, 0x4c, 0x6d, 0x5c, 0x07, 0x91, 0xca, 0xa2,
-	0x7b, 0xae, 0x42, 0x59, 0x6a, 0x66, 0x41, 0x28, 0x4b, 0xdd, 0x9b, 0xc7, 0xad, 0x2b, 0xb8, 0xde,
-	0xcf, 0x90, 0x91, 0xeb, 0x76, 0xd8, 0xff, 0x96, 0xb3, 0x7f, 0x01, 0x00, 0x00, 0xff, 0xff, 0x71,
-	0x98, 0x18, 0x42, 0xd4, 0x08, 0x00, 0x00,
+	// 723 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xb4, 0x56, 0x6f, 0x6f, 0xd3, 0x3e,
+	0x10, 0x6e, 0x7e, 0x5b, 0xbb, 0xed, 0xfa, 0x9b, 0x04, 0xde, 0x1f, 0xa5, 0x5e, 0x27, 0x15, 0x0f,
+	0xa4, 0xbd, 0xda, 0xc4, 0x06, 0x42, 0x6c, 0x7b, 0xb3, 0x31, 0x21, 0x21, 0xf1, 0x4f, 0x05, 0x34,
+	0x34, 0x01, 0x9a, 0x9b, 0x78, 0x5d, 0xa4, 0x92, 0x84, 0xc4, 0x61, 0xe2, 0xc3, 0xf2, 0x5d, 0x50,
+	0x1d, 0x27, 0x71, 0x12, 0x3b, 0x2d, 0x42, 0x7b, 0xd7, 0x73, 0xef, 0xee, 0xb9, 0xe7, 0x39, 0xfb,
+	0x2e, 0xd0, 0xa3, 0xa1, 0xb7, 0x1f, 0x46, 0x01, 0x0f, 0x46, 0xc9, 0xf5, 0xfe, 0x84, 0xb9, 0x63,
+	0x16, 0xed, 0x09, 0x1b, 0x75, 0x52, 0x8b, 0x04, 0xd0, 0xfd, 0x18, 0x51, 0x3f, 0xa6, 0x0e, 0xf7,
+	0x02, 0x1f, 0x21, 0x58, 0xe4, 0xbf, 0x42, 0x66, 0x5b, 0x03, 0x6b, 0x77, 0x65, 0x28, 0x7e, 0xa3,
+	0x4d, 0xe8, 0xdc, 0xd2, 0xc9, 0x84, 0x71, 0xfb, 0x3f, 0x71, 0x2a, 0xad, 0xe9, 0x39, 0xfd, 0x1e,
+	0x24, 0x3e, 0xb7, 0x17, 0x06, 0xd6, 0x6e, 0x7b, 0x28, 0x2d, 0xd4, 0x87, 0x15, 0x3a, 0x1e, 0x47,
+	0x6c, 0x4c, 0x39, 0xb3, 0x17, 0x45, 0x48, 0x71, 0x40, 0x28, 0xdc, 0x7f, 0x11, 0x31, 0xd7, 0xe3,
+	0x2a, 0x6c, 0x01, 0x61, 0x55, 0x21, 0x1c, 0xe1, 0x2c, 0xa0, 0xdb, 0x43, 0x69, 0x95, 0x21, 0x16,
+	0xaa, 0x10, 0x97, 0xb0, 0x75, 0xea, 0xba, 0x35, 0x94, 0x21, 0xfb, 0x91, 0xb0, 0x98, 0xa3, 0x63,
+	0xe8, 0xf2, 0xe2, 0x54, 0x20, 0x76, 0x0f, 0x7a, 0x7b, 0x52, 0x9e, 0x7a, 0x98, 0xea, 0x4d, 0x8e,
+	0xa0, 0xaf, 0xcf, 0x1d, 0x87, 0x81, 0x1f, 0x33, 0x84, 0x61, 0x39, 0x92, 0xbf, 0x25, 0x97, 0xdc,
+	0x26, 0xdf, 0xe0, 0xde, 0x39, 0x1b, 0xcd, 0xc7, 0x7c, 0x1d, 0xda, 0xee, 0xd4, 0x57, 0x12, 0x4f,
+	0x8d, 0x19, 0xbc, 0x3f, 0x03, 0x3e, 0x75, 0xdd, 0x2a, 0x44, 0x46, 0xfb, 0x48, 0x47, 0xdb, 0xce,
+	0x68, 0xd7, 0xa2, 0x4a, 0xac, 0x9f, 0x0b, 0x45, 0xeb, 0x99, 0xe7, 0x20, 0x3d, 0xed, 0x37, 0x8d,
+	0x6f, 0x5e, 0xf9, 0x77, 0xde, 0xef, 0x2a, 0xca, 0x9c, 0xfd, 0xae, 0x85, 0xe9, 0xfa, 0x5d, 0xcf,
+	0x3d, 0x07, 0xf5, 0x2b, 0x40, 0xd3, 0xc0, 0x77, 0xc9, 0x9d, 0x75, 0xfc, 0x4b, 0x5e, 0x5d, 0x19,
+	0x24, 0xa3, 0x7e, 0xa2, 0xa3, 0x8e, 0x55, 0xea, 0x95, 0xb8, 0x12, 0xf7, 0x63, 0xd8, 0x36, 0x64,
+	0x9f, 0x83, 0xfc, 0x1e, 0xac, 0x5f, 0x08, 0x62, 0x67, 0x74, 0x42, 0x7d, 0x87, 0x65, 0x25, 0x19,
+	0xe8, 0x93, 0xc7, 0xb0, 0x51, 0xf1, 0x97, 0x20, 0x36, 0x2c, 0x8d, 0xd2, 0x23, 0x11, 0xd1, 0x1e,
+	0x66, 0x26, 0x39, 0x84, 0x5e, 0x1a, 0xa2, 0xd4, 0x16, 0xcf, 0xc2, 0xf9, 0x04, 0x58, 0x17, 0x24,
+	0xc1, 0x9e, 0xc1, 0xff, 0x8a, 0x02, 0xb1, 0x6d, 0x0d, 0x16, 0x76, 0xbb, 0x07, 0x6b, 0x99, 0x62,
+	0xaa, 0x08, 0x25, 0x47, 0x72, 0x02, 0xfd, 0xd3, 0xac, 0x2d, 0xba, 0x72, 0x4a, 0x7d, 0xb4, 0xea,
+	0x2f, 0x77, 0xdb, 0x10, 0xfd, 0xaf, 0x75, 0xf9, 0x80, 0xc5, 0x9f, 0xd7, 0x2c, 0x4a, 0x69, 0xbf,
+	0x4c, 0x7c, 0x57, 0x15, 0x29, 0x0e, 0x92, 0xc8, 0xc9, 0x4a, 0x92, 0x16, 0x1a, 0x40, 0xd7, 0x65,
+	0x31, 0xf7, 0x7c, 0x2a, 0xee, 0x4d, 0x3a, 0xf7, 0xd5, 0x23, 0xd3, 0xf0, 0x27, 0x4f, 0x61, 0x4b,
+	0x8b, 0x27, 0x79, 0x6c, 0x42, 0x27, 0x62, 0x71, 0x32, 0xc9, 0xbb, 0x92, 0x5a, 0xe4, 0x0d, 0xf4,
+	0xce, 0x59, 0x18, 0xc4, 0x1e, 0xd7, 0x57, 0xa9, 0x7d, 0x31, 0x36, 0x2c, 0xb9, 0x69, 0x90, 0x7c,
+	0x33, 0x99, 0x49, 0x9e, 0x00, 0xd6, 0xa5, 0x9b, 0x51, 0xc4, 0x7b, 0xc0, 0x17, 0x1e, 0xbf, 0x71,
+	0x23, 0x7a, 0xfb, 0x17, 0x55, 0x60, 0x58, 0xbe, 0x95, 0x51, 0xb2, 0x8c, 0xdc, 0x9e, 0xaa, 0xa1,
+	0xcd, 0xd8, 0x5c, 0xc8, 0xc1, 0xef, 0x25, 0x58, 0x7d, 0x2d, 0x3a, 0xfb, 0x81, 0x45, 0x3f, 0x3d,
+	0x87, 0xa1, 0x2b, 0x58, 0xd3, 0xc8, 0x8a, 0x48, 0xe9, 0x02, 0x68, 0x7b, 0x8c, 0x77, 0x1a, 0x7d,
+	0xe4, 0x6b, 0x6d, 0xa1, 0xaf, 0x80, 0xea, 0x92, 0xa1, 0x07, 0xc5, 0x7e, 0x30, 0x74, 0x07, 0x93,
+	0x26, 0x97, 0x3c, 0xfd, 0x15, 0xac, 0x69, 0x94, 0x28, 0x08, 0x98, 0x85, 0x2f, 0x08, 0x34, 0x48,
+	0x49, 0x5a, 0xc8, 0x81, 0x75, 0xdd, 0x66, 0x46, 0x79, 0x78, 0xc3, 0x37, 0x01, 0x7e, 0xd8, 0xec,
+	0xa4, 0xd2, 0xd0, 0x2c, 0xc2, 0x82, 0x86, 0x79, 0xff, 0xe2, 0x9d, 0x46, 0x9f, 0x2a, 0x8d, 0xda,
+	0xca, 0x2c, 0xd1, 0x30, 0xac, 0xba, 0x32, 0x0d, 0xd3, 0xce, 0x22, 0x2d, 0x74, 0x0d, 0x1b, 0xda,
+	0xc9, 0x8e, 0xaa, 0x09, 0xb4, 0x6b, 0x05, 0x3f, 0x9a, 0xe1, 0x95, 0xe3, 0xbc, 0x85, 0xd5, 0xd2,
+	0x50, 0x47, 0xfd, 0xbc, 0x97, 0x9a, 0xdd, 0x80, 0xb7, 0x0d, 0xff, 0xaa, 0x97, 0xb4, 0x3e, 0xbc,
+	0x8b, 0x4b, 0x6a, 0xdc, 0x06, 0xc5, 0x25, 0x35, 0xcf, 0x7e, 0x29, 0x8b, 0x6e, 0x0c, 0x2b, 0xb2,
+	0x34, 0xcc, 0x78, 0x45, 0x96, 0xa6, 0x59, 0x4e, 0x5a, 0x67, 0x70, 0xb9, 0x9c, 0x7a, 0x86, 0xa3,
+	0x51, 0x47, 0x7c, 0x8f, 0x1f, 0xfe, 0x09, 0x00, 0x00, 0xff, 0xff, 0xae, 0x4d, 0xad, 0x67, 0xac,
+	0x0b, 0x00, 0x00,
 }
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -929,6 +1211,9 @@ const _ = grpc.SupportPackageIsVersion4
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://godoc.org/google.golang.org/grpc#ClientConn.NewStream.
 type LedgerServiceClient interface {
+	TransferWalletFunds(ctx context.Context, in *TransferWalletFundsRequest, opts ...grpc.CallOption) (*TransferWalletFundsResponse, error)
+	DepositWalletFunds(ctx context.Context, in *DepositWalletFundsRequest, opts ...grpc.CallOption) (*DepositWalletFundsResponse, error)
+	WithdrawWalletFunds(ctx context.Context, in *WithdrawWalletFundsRequest, opts ...grpc.CallOption) (*WithdrawWalletFundsResponse, error)
 	AddCreditTransaction(ctx context.Context, in *AddCreditTransactionRequest, opts ...grpc.CallOption) (*AddCreditTransactionResponse, error)
 	AddDebitTransaction(ctx context.Context, in *AddDebitTransactionRequest, opts ...grpc.CallOption) (*AddDebitTransactionResponse, error)
 	AddCashInTransaction(ctx context.Context, in *AddCashInTransactionRequest, opts ...grpc.CallOption) (*AddCashInTransactionResponse, error)
@@ -944,6 +1229,33 @@ type ledgerServiceClient struct {
 
 func NewLedgerServiceClient(cc *grpc.ClientConn) LedgerServiceClient {
 	return &ledgerServiceClient{cc}
+}
+
+func (c *ledgerServiceClient) TransferWalletFunds(ctx context.Context, in *TransferWalletFundsRequest, opts ...grpc.CallOption) (*TransferWalletFundsResponse, error) {
+	out := new(TransferWalletFundsResponse)
+	err := c.cc.Invoke(ctx, "/ledger.LedgerService/TransferWalletFunds", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *ledgerServiceClient) DepositWalletFunds(ctx context.Context, in *DepositWalletFundsRequest, opts ...grpc.CallOption) (*DepositWalletFundsResponse, error) {
+	out := new(DepositWalletFundsResponse)
+	err := c.cc.Invoke(ctx, "/ledger.LedgerService/DepositWalletFunds", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *ledgerServiceClient) WithdrawWalletFunds(ctx context.Context, in *WithdrawWalletFundsRequest, opts ...grpc.CallOption) (*WithdrawWalletFundsResponse, error) {
+	out := new(WithdrawWalletFundsResponse)
+	err := c.cc.Invoke(ctx, "/ledger.LedgerService/WithdrawWalletFunds", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
 }
 
 func (c *ledgerServiceClient) AddCreditTransaction(ctx context.Context, in *AddCreditTransactionRequest, opts ...grpc.CallOption) (*AddCreditTransactionResponse, error) {
@@ -1011,6 +1323,9 @@ func (c *ledgerServiceClient) AggregateTransactions(ctx context.Context, in *Agg
 
 // LedgerServiceServer is the server API for LedgerService service.
 type LedgerServiceServer interface {
+	TransferWalletFunds(context.Context, *TransferWalletFundsRequest) (*TransferWalletFundsResponse, error)
+	DepositWalletFunds(context.Context, *DepositWalletFundsRequest) (*DepositWalletFundsResponse, error)
+	WithdrawWalletFunds(context.Context, *WithdrawWalletFundsRequest) (*WithdrawWalletFundsResponse, error)
 	AddCreditTransaction(context.Context, *AddCreditTransactionRequest) (*AddCreditTransactionResponse, error)
 	AddDebitTransaction(context.Context, *AddDebitTransactionRequest) (*AddDebitTransactionResponse, error)
 	AddCashInTransaction(context.Context, *AddCashInTransactionRequest) (*AddCashInTransactionResponse, error)
@@ -1024,6 +1339,15 @@ type LedgerServiceServer interface {
 type UnimplementedLedgerServiceServer struct {
 }
 
+func (*UnimplementedLedgerServiceServer) TransferWalletFunds(ctx context.Context, req *TransferWalletFundsRequest) (*TransferWalletFundsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method TransferWalletFunds not implemented")
+}
+func (*UnimplementedLedgerServiceServer) DepositWalletFunds(ctx context.Context, req *DepositWalletFundsRequest) (*DepositWalletFundsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DepositWalletFunds not implemented")
+}
+func (*UnimplementedLedgerServiceServer) WithdrawWalletFunds(ctx context.Context, req *WithdrawWalletFundsRequest) (*WithdrawWalletFundsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method WithdrawWalletFunds not implemented")
+}
 func (*UnimplementedLedgerServiceServer) AddCreditTransaction(ctx context.Context, req *AddCreditTransactionRequest) (*AddCreditTransactionResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method AddCreditTransaction not implemented")
 }
@@ -1048,6 +1372,60 @@ func (*UnimplementedLedgerServiceServer) AggregateTransactions(ctx context.Conte
 
 func RegisterLedgerServiceServer(s *grpc.Server, srv LedgerServiceServer) {
 	s.RegisterService(&_LedgerService_serviceDesc, srv)
+}
+
+func _LedgerService_TransferWalletFunds_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(TransferWalletFundsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(LedgerServiceServer).TransferWalletFunds(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/ledger.LedgerService/TransferWalletFunds",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(LedgerServiceServer).TransferWalletFunds(ctx, req.(*TransferWalletFundsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _LedgerService_DepositWalletFunds_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DepositWalletFundsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(LedgerServiceServer).DepositWalletFunds(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/ledger.LedgerService/DepositWalletFunds",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(LedgerServiceServer).DepositWalletFunds(ctx, req.(*DepositWalletFundsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _LedgerService_WithdrawWalletFunds_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(WithdrawWalletFundsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(LedgerServiceServer).WithdrawWalletFunds(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/ledger.LedgerService/WithdrawWalletFunds",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(LedgerServiceServer).WithdrawWalletFunds(ctx, req.(*WithdrawWalletFundsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
 }
 
 func _LedgerService_AddCreditTransaction_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
@@ -1180,6 +1558,18 @@ var _LedgerService_serviceDesc = grpc.ServiceDesc{
 	ServiceName: "ledger.LedgerService",
 	HandlerType: (*LedgerServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "TransferWalletFunds",
+			Handler:    _LedgerService_TransferWalletFunds_Handler,
+		},
+		{
+			MethodName: "DepositWalletFunds",
+			Handler:    _LedgerService_DepositWalletFunds_Handler,
+		},
+		{
+			MethodName: "WithdrawWalletFunds",
+			Handler:    _LedgerService_WithdrawWalletFunds_Handler,
+		},
 		{
 			MethodName: "AddCreditTransaction",
 			Handler:    _LedgerService_AddCreditTransaction_Handler,

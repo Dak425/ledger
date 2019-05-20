@@ -90,7 +90,38 @@ message AggregateTransactionsResponse {
     repeated Transaction transactions = 1;
 }
 
+message TransferWalletFundsRequest {
+    string source = 1;
+    string destination = 2;
+    int32 amount = 3;
+}
+
+message TransferWalletFundsResponse {
+    string result = 1;
+}
+
+message DepositWalletFundsRequest {
+    string wallet = 1;
+    int32 deposit = 2;
+}
+
+message DepositWalletFundsResponse {
+    string result = 1;
+}
+
+message WithdrawWalletFundsRequest {
+    string wallet = 1;
+    int32 withdraw = 2;
+}
+
+message WithdrawWalletFundsResponse {
+    string result = 1;
+}
+
 service LedgerService {
+    rpc TransferWalletFunds(TransferWalletFundsRequest) returns (TransferWalletFundsResponse) {};
+    rpc DepositWalletFunds(DepositWalletFundsRequest) returns (DepositWalletFundsResponse) {};
+    rpc WithdrawWalletFunds(WithdrawWalletFundsRequest) returns (WithdrawWalletFundsResponse) {};
     rpc AddCreditTransaction(AddCreditTransactionRequest) returns (AddCreditTransactionResponse) {};
     rpc AddDebitTransaction(AddDebitTransactionRequest) returns (AddDebitTransactionResponse) {};
     rpc AddCashInTransaction(AddCashInTransactionRequest) returns (AddCashInTransactionResponse) {};
