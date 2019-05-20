@@ -79,11 +79,31 @@ func (b *Book) TransferWalletFunds(source string, destination string, amount int
 }
 
 func (b *Book) DepositWalletFunds(wallet string, deposit int32) (string, error) {
-	return "", nil
+	aggregate, err := genUUID()
+	if err != nil {
+		return "", fmt.Errorf("problem while depositing funds to wallet: %v", err)
+	}
+
+	err = b.AddTransaction(ledger.TransactionCashIn, wallet, deposit, aggregate)
+	if err != nil {
+		return "", fmt.Errorf("problem while depositing funds to wallet: %v", err)
+	}
+
+	return aggregate, nil
 }
 
 func (b *Book) WithdrawWalletFunds(wallet string, withdraw int32) (string, error) {
-	return "", nil
+	aggregate, err := genUUID()
+	if err != nil {
+		return "", fmt.Errorf("problem while withdrawing funds from wallet: %v", err)
+	}
+
+	err = b.AddTransaction(ledger.TransactionCashOut, wallet, withdraw, aggregate)
+	if err != nil {
+		return "", fmt.Errorf("problem while withdrawing funds from wallet: %v", err)
+	}
+
+	return aggregate, nil
 }
 
 func (b *Book) AddTransaction(transactionType string, wallet string, amount int32, aggregate string) error {

@@ -1,10 +1,10 @@
 package memory
 
 import (
+	ledgerpb "gitlab.com/patchwell/ledger/gen/api/protobuf"
 	"testing"
 
 	"gitlab.com/patchwell/ledger"
-	ledgerpb "gitlab.com/patchwell/ledger/gen/api/protobuf"
 	"gitlab.com/patchwell/ledger/pkg/test"
 )
 
@@ -27,38 +27,86 @@ func TestNewInMemoryBook(t *testing.T) {
 }
 
 func TestBook_TransferWalletFunds(t *testing.T) {
-	book := NewMockInMemoryBook()
-	source := "1"
-	destination := "2"
-	amount := int32(50000)
-	transactionCount := len(book.transactions)
+	t.Run("should create two new transactions, one 'credit' and one 'debit'", func(t *testing.T) {
+		book := NewMockInMemoryBook()
+		source := "1"
+		destination := "2"
+		amount := int32(50000)
+		transactionCount := len(book.transactions)
 
-	aggregate, err := book.TransferWalletFunds(source, destination, amount)
-	if err != nil {
-		t.Errorf("returned error when it shouldn't have: %v", err)
-	}
+		aggregate, err := book.TransferWalletFunds(source, destination, amount)
+		if err != nil {
+			t.Errorf("returned error when it shouldn't have: %v", err)
+		}
 
-	newCount := len(book.transactions)
-	if newCount != transactionCount+2 {
-		t.Errorf("book has incorrect transaction count after transfer, got %d, wanted %d", newCount, transactionCount+2)
-	}
+		newCount := len(book.transactions)
+		if newCount != transactionCount+2 {
+			t.Errorf("book has incorrect transaction count after transfer, got %d, wanted %d", newCount, transactionCount+2)
+		}
 
-	newTransactions := book.transactions[len(book.transactions)-2 : len(book.transactions)]
+		newTransactions := book.transactions[len(book.transactions)-2 : len(book.transactions)]
 
-	want := []ledgerpb.Transaction{
-		{Type: ledger.TransactionDebit, Wallet: "1", Amount: 50000, Aggregate: aggregate},
-		{Type: ledger.TransactionCredit, Wallet: "2", Amount: 50000, Aggregate: aggregate},
-	}
+		want := []ledgerpb.Transaction{
+			{Type: ledger.TransactionDebit, Wallet: "1", Amount: 50000, Aggregate: aggregate},
+			{Type: ledger.TransactionCredit, Wallet: "2", Amount: 50000, Aggregate: aggregate},
+		}
 
-	test.AssertTransactions(t, newTransactions, want)
+		test.AssertTransactions(t, newTransactions, want)
+	})
 }
 
 func TestBook_DepositWalletFunds(t *testing.T) {
+	t.Run("should create one new transaction, of type 'cash in'", func(t *testing.T) {
+		book := NewMockInMemoryBook()
+		wallet := "1"
+		amount := int32(50000)
+		transactionCount := len(book.transactions)
 
+		aggregate, err := book.DepositWalletFunds(wallet, amount)
+		if err != nil {
+			t.Errorf("returned error when it shouldn't have: %v", err)
+		}
+
+		newCount := len(book.transactions)
+		if newCount != transactionCount+1 {
+			t.Errorf("book has incorrect transaction count after deposit, got %d, wanted %d", newCount, transactionCount+2)
+		}
+
+		newTransactions := book.transactions[len(book.transactions)-1:]
+
+		want := []ledgerpb.Transaction{
+			{Type: ledger.TransactionCashIn, Wallet: "1", Amount: 50000, Aggregate: aggregate},
+		}
+
+		test.AssertTransactions(t, newTransactions, want)
+	})
 }
 
 func TestBook_WithdrawWalletFunds(t *testing.T) {
+	t.Run("should create one new transaction, of type 'cash-out'", func(t *testing.T) {
+		book := NewMockInMemoryBook()
+		wallet := "1"
+		amount := int32(50000)
+		transactionCount := len(book.transactions)
 
+		aggregate, err := book.WithdrawWalletFunds(wallet, amount)
+		if err != nil {
+			t.Errorf("returned error when it shouldn't have: %v", err)
+		}
+
+		newCount := len(book.transactions)
+		if newCount != transactionCount+1 {
+			t.Errorf("book has incorrect transaction count after withdrawel, got %d, wanted %d", newCount, transactionCount+2)
+		}
+
+		newTransactions := book.transactions[len(book.transactions)-1:]
+
+		want := []ledgerpb.Transaction{
+			{Type: ledger.TransactionCashOut, Wallet: "1", Amount: 50000, Aggregate: aggregate},
+		}
+
+		test.AssertTransactions(t, newTransactions, want)
+	})
 }
 
 func TestBook_AddTransaction(t *testing.T) {
