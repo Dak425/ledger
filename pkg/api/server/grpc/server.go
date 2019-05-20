@@ -2,6 +2,7 @@ package grpc
 
 import (
 	"context"
+	"fmt"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 
@@ -17,6 +18,61 @@ func NewGRPCServer(book ledger.Book) *Server {
 	return &Server{
 		book: book,
 	}
+}
+
+func (s *Server) TransferWalletFunds(ctx context.Context, req *ledgerpb.TransferWalletFundsRequest) (*ledgerpb.TransferWalletFundsResponse, error) {
+	if ctx.Err() == context.Canceled {
+		return nil, status.Error(codes.Canceled, "client cancelled, aborting")
+	}
+
+	source := req.GetSource()
+	destination := req.GetDestination()
+	amount := req.GetAmount()
+
+	aggregate, err := s.book.TransferWalletFunds(source, destination, amount)
+	if err != nil {
+		return nil, status.Errorf(codes.FailedPrecondition, "problem when transferring wallet funds: %v", err)
+	}
+
+	return &ledgerpb.TransferWalletFundsResponse{
+		Result: fmt.Sprintf("funds transferred successfully, transfer ID: '%s'", aggregate),
+	}, nil
+}
+
+func (s *Server) DepositWalletFunds(ctx context.Context, req *ledgerpb.DepositWalletFundsRequest) (*ledgerpb.DepositWalletFundsResponse, error) {
+	if ctx.Err() == context.Canceled {
+		return nil, status.Error(codes.Canceled, "client cancelled, aborting")
+	}
+
+	wallet := req.GetWallet()
+	deposit := req.GetDeposit()
+
+	aggregate, err := s.book.DepositWalletFunds(wallet, deposit)
+	if err != nil {
+		return nil, status.Errorf(codes.FailedPrecondition, "problem when depositing wallet funds: %v", err)
+	}
+
+	return &ledgerpb.DepositWalletFundsResponse{
+		Result: fmt.Sprintf("funds deposited successfully, deposit ID: '%s'", aggregate),
+	}, nil
+}
+
+func (s *Server) WithdrawWalletFunds(ctx context.Context, req *ledgerpb.WithdrawWalletFundsRequest) (*ledgerpb.WithdrawWalletFundsResponse, error) {
+	if ctx.Err() == context.Canceled {
+		return nil, status.Error(codes.Canceled, "client cancelled, aborting")
+	}
+
+	wallet := req.GetWallet()
+	withdraw := req.GetWithdraw()
+
+	aggregate, err := s.book.WithdrawWalletFunds(wallet, withdraw)
+	if err != nil {
+		return nil, status.Errorf(codes.FailedPrecondition, "problem when withdawing wallet funds: %v", err)
+	}
+
+	return &ledgerpb.WithdrawWalletFundsResponse{
+		Result: fmt.Sprintf("funds withdrawn successfully, withdrawel ID: '%s'", aggregate),
+	}, nil
 }
 
 func (s *Server) AddCreditTransaction(ctx context.Context, req *ledgerpb.AddCreditTransactionRequest) (*ledgerpb.AddCreditTransactionResponse, error) {
