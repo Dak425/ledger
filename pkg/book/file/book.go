@@ -1,14 +1,14 @@
 package file
 
 import (
+	"crypto/rand"
 	"encoding/json"
 	"errors"
 	"fmt"
 	"os"
 
-	ledgerpb "gitlab.com/patchwell/ledger/gen/api/protobuf"
-
 	"gitlab.com/patchwell/ledger"
+	ledgerpb "gitlab.com/patchwell/ledger/gen/api/protobuf"
 )
 
 func initializeFile(file *os.File) error {
@@ -36,15 +36,15 @@ type Book struct {
 }
 
 func (b *Book) TransferWalletFunds(source string, destination string, amount int32) (string, error) {
-	panic("implement me")
+	return "", nil
 }
 
 func (b *Book) DepositWalletFunds(wallet string, deposit int32) (string, error) {
-	panic("implement me")
+	return "", nil
 }
 
 func (b *Book) WithdrawWalletFunds(wallet string, withdraw int32) (string, error) {
-	panic("implement me")
+	return "", nil
 }
 
 func NewFileSystemBook(file *os.File) (*Book, error) {
@@ -79,8 +79,7 @@ func (b *Book) AddTransaction(transactionType string, wallet string, amount int3
 	}
 
 	b.transactions = append(b.transactions, t)
-	b.addWalletMapEntry(t)
-	b.addAggregateMapEntry(t)
+	b.addMapEntries(t)
 
 	b.database.Encode(b.transactions)
 
@@ -142,8 +141,7 @@ func (b *Book) loadTransactions(file *os.File) error {
 	}
 
 	for _, t := range b.transactions {
-		b.addWalletMapEntry(t)
-		b.addAggregateMapEntry(t)
+		b.addMapEntries(t)
 	}
 
 	return nil
@@ -167,4 +165,27 @@ func (b *Book) addAggregateMapEntry(transaction ledgerpb.Transaction) {
 
 	// append transaction pointer to aggregate's slice of transactions
 	b.aggregateMap[transaction.GetAggregate()] = append(b.aggregateMap[transaction.GetAggregate()], &transaction)
+}
+
+func (b *Book) addMapEntries(transaction ledgerpb.Transaction) {
+	b.addWalletMapEntry(transaction)
+	b.addAggregateMapEntry(transaction)
+}
+
+func (b *Book) addTransactions(transactions []ledgerpb.Transaction) {
+	b.transactions = append(b.transactions, transactions...)
+
+	for _, t := range transactions {
+		b.addMapEntries(t)
+	}
+}
+
+func genUUID() (string, error) {
+	b := make([]byte, 16)
+	_, err := rand.Read(b)
+	if err != nil {
+		return "", fmt.Errorf("error when generating uuid: %v", err)
+	}
+
+	return fmt.Sprintf("%X-%X-%X-%X-%X", b[0:4], b[4:6], b[6:8], b[8:10], b[10:]), nil
 }
